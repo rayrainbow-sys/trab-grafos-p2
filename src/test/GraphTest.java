@@ -62,8 +62,14 @@ class GraphTest {
     @DisplayName("Testa impressao da lista de vizinhos")
     void getNeighbors() {
         ArrayList<Integer> neighbors = pdfGraph.getNeighbors(1);
-        assertEquals(2, neighbors.get(0));
-        assertEquals(5, neighbors.get(1));
+
+        for (int i=1; i<=pdfGraph.getNNodes(); i++) {
+            if (i == 2 || i == 5) {
+                assertEquals(true, neighbors.contains(i));
+            } else {
+                assertEquals(false, neighbors.contains(i));
+            }
+        }
     }
 
     @Test
