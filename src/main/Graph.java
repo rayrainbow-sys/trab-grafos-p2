@@ -1,7 +1,13 @@
 package main;
 
+// Para representação das adjacências:
 import java.util.LinkedList;
 import java.util.ArrayList;
+
+// Para ler o arquivo de entrada:
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class Graph {
     private int nNodes;
@@ -10,19 +16,29 @@ public class Graph {
 
     /**
      * Construtor da classe Graph.
-     * @param nNodes Número de nós do grafo.
+     * @param filepath Arquivo de entrada no formato especificado. O caminho pode
+     *                 ser especificado de forma absoluta ou relativa, a partir da
+     *                 raiz do projeto.
      * @param reprChoice O valor 0 indica escolha pela representação por matriz de
      *                   adjacências; 1 define a opção pela lista de adjacências.
      */
-    public Graph(int nNodes, int reprChoice) {
-        this.nNodes = nNodes;
+    public Graph(String filepath, int reprChoice) throws InstantiationException {
+        if (reprChoice != 1 && reprChoice !=0) {
+            throw new IllegalArgumentException("0 para representacao por matriz, 1 para grafo");
+        }  // else
 
-        if (reprChoice == 0) {
-            this.adjList = null;
+        try {
+            File inputFile = new File(filepath);
+            Scanner inputReader = new Scanner(inputFile);
 
-            // Inicializa matriz de adjacência de zeros
+            this.nNodes = Integer.parseInt(inputReader.nextLine());
 
-            throw new UnsupportedOperationException("Ainda nao implementado");
+            if (reprChoice == 0) {
+                this.adjList = null;
+
+                // Inicializa matriz de adjacência de zeros
+
+//                throw new UnsupportedOperationException("Ainda nao implementado");
 
 //            for (int i=0; i < nNodes; i++) {
 //
@@ -31,13 +47,29 @@ public class Graph {
 //                }
 //            }
 
-        } else if (reprChoice == 1) {
-            this.adjMatrix = null;
+            } else if (reprChoice == 1) {
+                this.adjMatrix = null;
 
-            // Inicializa lista de adjacências sem vizinhos
-            throw new UnsupportedOperationException("Ainda nao implementado");
-        } else {
-            throw new IllegalArgumentException("0 para representacao por matriz, 1 para grafo");
+                // Inicializa lista de adjacências sem vizinhos
+//                throw new UnsupportedOperationException("Ainda nao implementado");
+            }
+
+            while (inputReader.hasNextLine()) {
+                String link = inputReader.nextLine();
+                String[] nodeStrings = link.split(" ");
+
+                int node1 = Integer.parseInt(nodeStrings[0]);
+                int node2 = Integer.parseInt(nodeStrings[1]);
+
+//                System.out.println(node1 + ", " + node2);
+
+                // inserir na posição correspondente
+            }
+
+            inputReader.close();
+        } catch (FileNotFoundException exc) {
+            System.err.println("Falha na leitura de " + filepath);
+            throw new InstantiationException("Arquivo de entrada inexistente; grafo nao instanciado");
         }
     }
 
