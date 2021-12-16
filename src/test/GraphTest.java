@@ -10,13 +10,38 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GraphTest {
     private static main.Graph pdfGraph;
+    private static main.Graph connected7;
+    private static main.Graph disconnected6;
+    private static main.Graph disconnected15;
 
     @BeforeAll
     static void setUp() {
         try {
             pdfGraph = new main.Graph("src/test/input/pdf.txt", 1);
         } catch (InstantiationException exc) {
-            System.err.println("Falha na criacao do grafo do pdf");  // como lidar com isso nos testes?
+            System.err.println("Falha na criacao do grafo do pdf");
+            // Como lidar com isso nos testes?
+            // A rigor, acho que a gente deveria estar testando se cada um é null antes
+            // de rodar mais testes, mas, como são sempre os mesmos 4 e já sabemos que
+            // estão funcionando, vou evitar ficar enchendo de if (... != null)
+        }
+
+        try {
+            connected7 = new main.Graph("src/test/input/teste1.txt", 0);
+        } catch (InstantiationException exc) {
+            System.err.println("Falha na criacao do grafo manual 1");
+        }
+
+        try {
+            disconnected6 = new main.Graph("src/test/input/teste2.txt", 1);
+        } catch (InstantiationException exc) {
+            System.err.println("Falha na criacao do grafo manual 2");
+        }
+
+        try {  // vai falhar
+            disconnected15 = new main.Graph("src/test/input/teste3.txt", 1);
+        } catch (InstantiationException exc) {
+            System.err.println("Falha na criacao do grafo manual 3");
         }
     }
 
@@ -28,6 +53,9 @@ class GraphTest {
     @DisplayName("Testa numero de nos")
     void getNNodes() {
         assertEquals(5, pdfGraph.getNNodes());
+        assertEquals(7, connected7.getNNodes());
+        assertEquals(6, disconnected6.getNNodes());
+        assertEquals(16, disconnected15.getNNodes());
     }
 
     @Test
@@ -41,7 +69,6 @@ class GraphTest {
     @Test
     void getDegree() {
       assertEquals(4, pdfGraph.getDegree(5));
-    
     }
 //
      @Test

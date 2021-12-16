@@ -141,8 +141,8 @@ public class Graph {
      * @return Grau do nó.
      */
     public int getDegree(int node) {
-        throw new UnsupportedOperationException("Ainda nao implementado");
-//        return -1;
+        ArrayList<Integer> neighbors = this.getNeighbors(node);
+        return neighbors.size();
     }
 
     // max, min, médio, mediano: melhor função ou fazer no main?
