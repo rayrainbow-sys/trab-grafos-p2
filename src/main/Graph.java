@@ -4,6 +4,7 @@ package main;
 import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 // Para ler o arquivo de entrada:
 import java.io.File;
@@ -12,6 +13,7 @@ import java.util.Scanner;
 
 public class Graph {
     private int nNodes;
+    private int nEdges;
     private ArrayList<ArrayList<Integer>> adjMatrix;
     private ArrayList<LinkedList<Integer>> adjList;
 
@@ -25,7 +27,9 @@ public class Graph {
      */
     public Graph(String filepath, int reprChoice) throws InstantiationException {
         if (reprChoice != 1 && reprChoice !=0) {
-            throw new IllegalArgumentException("0 para representacao por matriz, 1 para grafo");
+            System.err.println("Argumento invalido: use 0 para representacao " +
+                    "por matriz, 1 para grafo");
+            throw new InstantiationException("Arquivo de entrada inexistente; grafo nao instanciado");
         }  // else
 
         try {
@@ -33,16 +37,17 @@ public class Graph {
             Scanner inputReader = new Scanner(inputFile);
 
             this.nNodes = Integer.parseInt(inputReader.nextLine());
+            this.nEdges = 0;  // acumulador
 
             if (reprChoice == 0) {
                 this.adjList = null;
                 this.adjMatrix = new ArrayList<ArrayList<Integer>>();
 
                 // Inicializa matriz de adjacência com zeros
-                for (int i=0; i <= nNodes; i++) {
+                for (int i=0; i <= this.getNNodes(); i++) {
                     ArrayList<Integer> row = new ArrayList<Integer>();
 
-                    for (int j = 0; j <= nNodes; j++) {
+                    for (int j = 0; j <= this.getNNodes(); j++) {
                         row.add(0);
                     }
 
@@ -54,7 +59,7 @@ public class Graph {
                 this.adjList = new ArrayList<LinkedList<Integer>>();
 
                 // Inicializa lista de adjacências sem vizinhos
-                for (int i=0; i <= nNodes; i++) {
+                for (int i=0; i <= this.getNNodes(); i++) {
                     LinkedList<Integer> ll = new LinkedList<Integer>();
                     ll.add(i);
 
@@ -62,11 +67,14 @@ public class Graph {
                 }
             }
 
-            // Obs: não sei se é o melhor caminho, mas, como ele indexa a partir do 1, em ambos os
-            // casos incluí o índice 0, mas pra deixar "em branco" (sem uso); me pareceu melhor do
-            // que usar um HashMap só pra pular os índices 0
+            // Obs: não sei se é o melhor caminho, mas, como ele indexa a partir
+            // do 1, em ambos os casos incluí o índice 0, mas pra deixar "em
+            // branco" (sem uso); me pareceu melhor do que usar um HashMap só
+            // pra pular os índices 0
 
             while (inputReader.hasNextLine()) {
+                this.nEdges++;
+
                 String link = inputReader.nextLine();
                 String[] nodeStrings = link.split(" ");
 
@@ -95,6 +103,14 @@ public class Graph {
      */
     public int getNNodes() {
         return nNodes;
+    }
+
+    /**
+     * Retorna a quantidade de arestas do grafo.
+     * @return Número de arestas.
+     */
+    public int getNEdges() {
+        return nEdges;
     }
 
     /**
@@ -143,6 +159,22 @@ public class Graph {
     public int getDegree(int node) {
         ArrayList<Integer> neighbors = this.getNeighbors(node);
         return neighbors.size();
+    }
+
+    /**
+     * Fornece alguns dados com caráter de "resumo numérico" sobre os valores
+     * dos graus dos nós -- nominalmente, os graus máximo, mínimo, médio e
+     * mediano do grafo.
+     *
+     * @return HashMap em que o índice "min" corresponde ao grau mínimo, "max" ao
+     * máximo, "mean" ao grau médio e "med" ao grau mediano.
+     */
+    public HashMap<String, Integer> getDegreeOverview() {
+        HashMap<String, Integer> data = new HashMap<String, Integer>();
+
+//        data.put("")
+
+        return data;
     }
 
     // max, min, médio, mediano: melhor função ou fazer no main?

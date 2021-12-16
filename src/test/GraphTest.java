@@ -59,6 +59,12 @@ class GraphTest {
     }
 
     @Test
+    @DisplayName("Testa numero de arestas")
+    void getNEdges() {
+        assertEquals(5, pdfGraph.getNEdges());
+    }
+
+    @Test
     @DisplayName("Testa impressao da lista de vizinhos")
     void getNeighbors() {
         ArrayList<Integer> neighbors = pdfGraph.getNeighbors(1);
