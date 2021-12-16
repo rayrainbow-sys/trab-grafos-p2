@@ -35,24 +35,35 @@ public class Graph {
 
             if (reprChoice == 0) {
                 this.adjList = null;
+                this.adjMatrix = new ArrayList<ArrayList<Integer>>();
 
-                // Inicializa matriz de adjacência de zeros
+                // Inicializa matriz de adjacência com zeros
+                for (int i=0; i <= nNodes; i++) {
+                    ArrayList<Integer> row = new ArrayList<Integer>();
 
-//                throw new UnsupportedOperationException("Ainda nao implementado");
+                    for (int j = 0; j <= nNodes; j++) {
+                        row.add(0);
+                    }
 
-//            for (int i=0; i < nNodes; i++) {
-//
-//                for (int j=0; j < nNodes; j++) {
-//
-//                }
-//            }
+                    this.adjMatrix.add(row);
+                }
 
-            } else if (reprChoice == 1) {
+            } else {
                 this.adjMatrix = null;
+                this.adjList = new ArrayList<LinkedList<Integer>>();
 
                 // Inicializa lista de adjacências sem vizinhos
-//                throw new UnsupportedOperationException("Ainda nao implementado");
+                for (int i=0; i <= nNodes; i++) {
+                    LinkedList<Integer> ll = new LinkedList<Integer>();
+                    ll.add(i);
+
+                    this.adjList.add(ll);
+                }
             }
+
+            // Obs: não sei se é o melhor caminho, mas, como ele indexa a partir do 1, em ambos os
+            // casos incluí o índice 0, mas pra deixar "em branco" (sem uso); me pareceu melhor do
+            // que usar um HashMap só pra pular os índices 0
 
             while (inputReader.hasNextLine()) {
                 String link = inputReader.nextLine();
@@ -61,9 +72,13 @@ public class Graph {
                 int node1 = Integer.parseInt(nodeStrings[0]);
                 int node2 = Integer.parseInt(nodeStrings[1]);
 
-//                System.out.println(node1 + ", " + node2);
-
-                // inserir na posição correspondente
+                if (reprChoice == 0) {
+                    this.adjMatrix.get(node1).set(node2, 1);
+                    this.adjMatrix.get(node2).set(node1, 1);
+                } else {
+                    this.adjList.get(node1).add(node2);
+                    this.adjList.get(node2).add(node1);
+                }
             }
 
             inputReader.close();

@@ -14,7 +14,7 @@ class GraphTest {
         try {
             pdfGraph = new main.Graph("src/test/input/pdf.txt", 0);
         } catch (InstantiationException exc) {
-            System.err.println("Falha na criacao do grafo do pdf");
+            System.err.println("Falha na criacao do grafo do pdf");  // como lidar com isso nos testes?
         }
     }
 
