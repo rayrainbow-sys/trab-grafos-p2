@@ -28,21 +28,22 @@ class GraphTest {
         assertEquals(5, pdfGraph.getNNodes());
     }
 
-//    @Test
-//    void getDegree() {
-//      assertEquals(
+    @Test
+    void getDegree() {
+      assertEquals(4, pdfGraph.getDegree(5));
     
-//    }
+    }
 //
-//    @Test
-//    void calcDistance() {
-//      
-//    }
+     @Test
+     void calcDistance() {
+        assertEquals(2, pdfGraph.calcDistance(5, 2);
+        //assertEquals(1, pdfGraph.calcDistance(5, 3);  
+    }
 //
-//    @Test
-//    void calcDiameter() {
+    @Test
+    void calcDiameter() {
          assertEquals(2, pdfGraph.calcDiameter());
-//    }
+    }
 //
 //    @Test
 //    void BFS() {
