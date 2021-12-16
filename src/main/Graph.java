@@ -1,6 +1,7 @@
 package main;
 
 // Para representação das adjacências:
+import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.ArrayList;
 
@@ -94,6 +95,41 @@ public class Graph {
      */
     public int getNNodes() {
         return nNodes;
+    }
+
+    /**
+     * Retorna os vizinhos de um nó num formato unificado tanto para a representação por
+     * matriz quanto por lista, para possibilitar a composição com outros métodos.
+     *
+     * (Chegamos a discutir sobre as ineficiências introduzidas por essa abstração, por
+     * exigir uma etapa extra de conversão. Só depois percebemos que, como era pedido que
+     * medíssemos o tempo separadamente para cara forma de representação, o uso deste método
+     * seria incompatível com o trabalho, pois, justamente, eliminaria essas diferenças. Como
+     * o método já estava pronto e testado, deixamos aqui caso viesse a ser necessário, mas
+     * não o estamos usando na BFS e DFS.)
+     *
+     * @param node Índice do nó.
+     * @return ArrayList de inteiros, com os índices dos vizinhos do nó.
+     */
+    public ArrayList<Integer> getNeighbors(int node) {
+        ArrayList<Integer> neighbors;
+
+        if (this.adjList == null) {
+            neighbors = new ArrayList<Integer>();
+            ArrayList<Integer> mtxRow = adjMatrix.get(node);
+
+            for (int i=1; i<=nNodes; i++) {
+                if (mtxRow.get(i) == 1) {
+                    neighbors.add(i);
+                }
+            }
+        } else {
+            LinkedList<Integer> ll = adjList.get(node);
+            neighbors = new ArrayList<Integer>(ll);
+            neighbors.remove(0); // o próprio nó
+        }
+
+        return neighbors;
     }
 
     /**

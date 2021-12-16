@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 //import main;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class GraphTest {
@@ -12,7 +14,7 @@ class GraphTest {
     @BeforeAll
     static void setUp() {
         try {
-            pdfGraph = new main.Graph("src/test/input/pdf.txt", 0);
+            pdfGraph = new main.Graph("src/test/input/pdf.txt", 1);
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo do pdf");  // como lidar com isso nos testes?
         }
@@ -29,6 +31,14 @@ class GraphTest {
     }
 
     @Test
+    @DisplayName("Testa impressao da lista de vizinhos")
+    void getNeighbors() {
+        ArrayList<Integer> neighbors = pdfGraph.getNeighbors(1);
+        assertEquals(2, neighbors.get(0));
+        assertEquals(5, neighbors.get(1));
+    }
+
+    @Test
     void getDegree() {
       assertEquals(4, pdfGraph.getDegree(5));
     
@@ -36,8 +46,8 @@ class GraphTest {
 //
      @Test
      void calcDistance() {
-        assertEquals(2, pdfGraph.calcDistance(5, 2);
-        //assertEquals(1, pdfGraph.calcDistance(5, 3);  
+        assertEquals(2, pdfGraph.calcDistance(5, 2));
+        assertEquals(1, pdfGraph.calcDistance(5, 3));
     }
 //
     @Test
