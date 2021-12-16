@@ -30,14 +30,18 @@ class GraphTest {
 
 //    @Test
 //    void getDegree() {
+//      assertEquals(
+    
 //    }
 //
 //    @Test
 //    void calcDistance() {
+//      
 //    }
 //
 //    @Test
 //    void calcDiameter() {
+         assertEquals(2, pdfGraph.calcDiameter());
 //    }
 //
 //    @Test
