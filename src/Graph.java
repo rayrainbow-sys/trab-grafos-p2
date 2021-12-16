@@ -3,8 +3,8 @@ import java.util.ArrayList;
 
 public class Graph {
     private int nNodes;
-    private ArrayList<ArrayList<Int>> adjMatrix;
-    private ArrayList<LinkedList<Int>> adjList;
+    private ArrayList<ArrayList<Integer>> adjMatrix;
+    private ArrayList<LinkedList<Integer>> adjList;
 
     /**
      * Construtor da classe Graph.
@@ -22,12 +22,12 @@ public class Graph {
 
             throw new UnsupportedOperationException("Ainda nao implementado");
 
-            for (int i=0; i < nNodes; i++) {
-
-                for (int j=0; j < nNodes; j++) {
-
-                }
-            }
+//            for (int i=0; i < nNodes; i++) {
+//
+//                for (int j=0; j < nNodes; j++) {
+//
+//                }
+//            }
 
         } else if (reprChoice == 1) {
             this.adjMatrix = null;
@@ -57,8 +57,7 @@ public class Graph {
      */
     public int getDegree(int node) {
         throw new UnsupportedOperationException("Ainda nao implementado");
-
-        return -1;
+//        return -1;
     }
 
     // max, min, médio, mediano: melhor função ou fazer no main?
@@ -72,7 +71,7 @@ public class Graph {
      */
     public int calcDistance(int node1, int node2) {
         throw new UnsupportedOperationException("Ainda nao implementado");
-        return -1;
+//        return -1;
     }
 
     /**
@@ -82,7 +81,7 @@ public class Graph {
      */
     public int calcDiameter() {
         throw new UnsupportedOperationException("Ainda nao implementado");
-        return -1;
+//        return -1;
     }
 
     /**
