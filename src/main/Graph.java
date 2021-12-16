@@ -9,7 +9,7 @@ public class Graph {
     private ArrayList<LinkedList<Integer>> adjList;
 
     /**
-     * Construtor da classe main.Graph.
+     * Construtor da classe Graph.
      * @param nNodes Número de nós do grafo.
      * @param reprChoice O valor 0 indica escolha pela representação por matriz de
      *                   adjacências; 1 define a opção pela lista de adjacências.
