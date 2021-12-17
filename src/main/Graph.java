@@ -5,6 +5,7 @@ import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Collections;
 
 // Para ler o arquivo de entrada:
 import java.io.File;
@@ -172,7 +173,35 @@ public class Graph {
     public HashMap<String, Integer> getDegreeOverview() {
         HashMap<String, Integer> data = new HashMap<String, Integer>();
 
-//        data.put("")
+        data.put("max", 0);
+        data.put("min", this.getNNodes() + 1);  // impossível ser >=
+        data.put("mean", 2 * this.getNNodes() / this.getNEdges());
+//        data.put("med", 0);
+
+        ArrayList<Integer> degrees = new ArrayList<Integer>();
+
+        degrees.add(0);  // ignorando o índice 0
+
+        int n = this.getNNodes();
+
+        for (int i=1; i <= n; i++) {
+            int deg = this.getDegree(i);
+            degrees.add(deg);
+
+            if (deg > data.get("max")) {
+                data.put("max", deg);
+            } else if (deg < data.get("min")) {
+                data.put("min", deg);
+            }
+        }
+
+        Collections.sort(degrees);  // sorts in place
+
+        if (n % 2 == 0) {
+            data.put("med", (degrees.get(n /2) + degrees.get(n /2 + 1)) / 2);
+        } else {
+            data.put("med", degrees.get(n /2 + 1));
+        }
 
         return data;
     }

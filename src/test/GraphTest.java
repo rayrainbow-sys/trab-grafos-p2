@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 //import main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,6 +14,8 @@ class GraphTest {
     private static main.Graph connected7;
     private static main.Graph disconnected6;
     private static main.Graph disconnected15;
+
+    private static double eps = 1e-6;  // p/ comparações de floats
 
     @BeforeAll
     static void setUp() {
@@ -79,16 +82,52 @@ class GraphTest {
     }
 
     @Test
+    @DisplayName("Testa grau")
     void getDegree() {
       assertEquals(4, pdfGraph.getDegree(5));
     }
-//
-     @Test
-     void calcDistance() {
+
+    @Test
+    @DisplayName("Testa resumo grau")
+    void getDegreeOverview() {
+        HashMap<String, Integer> pdfData = pdfGraph.getDegreeOverview();
+
+        assertEquals(4, pdfData.get("max"));
+        assertEquals(1, pdfData.get("min"));
+        assertEquals(true, Math.abs(pdfData.get("mean") - 2) < eps);
+        assertEquals(true, Math.abs(pdfData.get("med") - 2) < eps);
+        // 1, 1, 2, 2, 4
+
+        // Só o pdfGraph está passando; dá uma conferida na sua representação
+        // dos demais quando puder, Ray!
+        HashMap<String, Integer> c7Data = connected7.getDegreeOverview();
+
+        assertEquals(2, c7Data.get("max"));
+        assertEquals(1, c7Data.get("min"));
+        assertEquals(true, Math.abs(c7Data.get("mean") - 12.0/7.0) < eps);
+        assertEquals(true, Math.abs(c7Data.get("med") - 1.5) < eps);
+
+        HashMap<String, Integer> d6Data = disconnected6.getDegreeOverview();
+
+        assertEquals(2, d6Data.get("max"));
+        assertEquals(1, d6Data.get("min"));
+        assertEquals(true, Math.abs(d6Data.get("mean") - 8.0/6.0) < eps);
+        assertEquals(true, Math.abs(d6Data.get("med") - 1.5) < eps);
+
+        HashMap<String, Integer> d15Data = connected7.getDegreeOverview();
+
+        assertEquals(4, d15Data.get("max"));
+        assertEquals(1, d15Data.get("min"));
+        assertEquals(true, Math.abs(d15Data.get("mean") - 24.0/15.0) < eps);
+        assertEquals(true, Math.abs(d15Data.get("med") - 2.5) < eps);
+    }
+
+    @Test
+    void calcDistance() {
         assertEquals(2, pdfGraph.calcDistance(5, 2));
         assertEquals(1, pdfGraph.calcDistance(5, 3));
     }
-//
+
     @Test
     void calcDiameter() {
          assertEquals(2, pdfGraph.calcDiameter());
