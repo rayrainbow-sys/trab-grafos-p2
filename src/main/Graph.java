@@ -233,12 +233,20 @@ public class Graph {
     public ArrayList<Integer> BFSList(int origin) {
         //Array booleano com a marcacao dos vertices
         //Todos os vertices sao desmarcados a principio
-        Boolean visited[] = new Boolean[nNodes];
-        Array.fill(visited, false);
+        Boolean known[] = new Boolean[this.getNNodes() + 1];
+        // obs: mudei o nome de visited p/ known porque a marcação é na
+        // descoberta (pelo que eu entendi)
+
+        // tb mudei de nNodes elementos p/ nNodes + 1 p/ pular o índice 0, já
+        // que eles indexam a partir do 1 (consistente com alguns outros
+        // métodos)
+
+        Array.fill(known, false);
 
         LinkedList<Integer> queue = new LinkedList<Integer>();
+        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
 
-        visited[origin] = true;   //Marcamos o vertice origem
+        known[origin] = true;   //Marcamos o vertice origem
         queue.add(origin);        //e o adicionamos na fila
 
         while (queue.size() != 0) {
@@ -249,16 +257,16 @@ public class Graph {
             while (iter.hasNext()) {
                 int w = iter.next();
 
-                if (!visited[w]) {
-                    visited[w] = true;
+                if (!known[w]) {
+                    known[w] = true;
+                    connectedToOrigin.add(w);
+                    // movi a linha acima p/ dentro deste loop p/ ter um loop
+                    // a menos
                     queue.add(w);
                 }
             }
         }
-        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
-        for (int i = 0; i < visited.length; i++) {
-            if (visited[i]) connectedToOrigin.add(i);
-        }
+
         return connectedToOrigin;
     }
 
