@@ -41,7 +41,7 @@ class GraphTest {
         }
 
         try {
-            disconnected6 = new main.Graph("src/test/input/teste2.txt", 1);
+            disconnected6 = new main.Graph("src/test/input/teste2.txt", 0);
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo manual 2");
         }
@@ -145,6 +145,32 @@ class GraphTest {
         // (estava errado no doc? Rever o grafo)
     }
 
+    @Test
+    @DisplayName("Testa identificação de componente conexa pela BFS")  // por
+        // enquanto
+    void BFS() {
+        ArrayList<Integer> d6con5 = disconnected6.BFS(5);
+
+//        System.out.print(d6con5);
+        for (int i=1; i<=disconnected6.getNNodes(); i++) {
+            if (i >= 5) {
+                assertEquals(true, d6con5.contains(i), "Faltou " + i);
+            } else {
+                assertEquals(false, d6con5.contains(i), i + " a mais");
+            }
+        }
+
+        ArrayList<Integer> d6con2 = disconnected6.BFS(2);
+
+//        System.out.print(d6con2);
+        for (int i=1; i<=disconnected6.getNNodes(); i++) {
+            if (i < 5) {
+                assertEquals(true, d6con2.contains(i), "Faltou " + i);
+            } else {
+                assertEquals(false, d6con2.contains(i), i + " a mais");
+            }
+        }
+    }
     @Test
     void calcDistance() {
         assertEquals(2, pdfGraph.calcDistance(5, 2));
