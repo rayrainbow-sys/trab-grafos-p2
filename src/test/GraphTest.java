@@ -133,9 +133,25 @@ class GraphTest {
          assertEquals(2, pdfGraph.calcDiameter());
     }
 //
-//    @Test
-//    void BFS() {
-//    }
+    @Test
+    void BFS() {
+        ArrayList<Integer> expectedPdfGraph = new ArrayList<Integer>(Arrays.asList(1,2,3,4,5));
+        ArrayList<Integer> expectedTest1AnyOrigin = new ArrayList<Integer>(Arrays.asList(1,2,3,4,5,6,7));
+        ArrayList<Integer> expectedTest2Origin1 = new ArrayList<Integer>(Arrays.asList(1,2,3,4));
+        ArrayList<Integer> expectedTest2Origin5 = new ArrayList<Integer>(Arrays.asList(5,6));
+        ArrayList<Integer> expectedTest3Origin1 = new ArrayList<Integer>(Arrays.asList(1,2,3,4,5,6));
+        ArrayList<Integer> expectedTest3Origin7 = new ArrayList<Integer>(Arrays.asList(7,8,9,10));
+        ArrayList<Integer> expectedTest3Origin11 = new ArrayList<Integer>(Arrays.asList(11,12,13,14,15));
+
+        assertEquals(expectedPdfGraph, pdfGraph.BFS(1));
+        assertEquals(expectedTest1AnyOrigin, connected7.BFS(1));
+        assertEquals(expectedTest2Origin1, disconnected6.BFS(1));
+        assertEquals(expectedTest2Origin5, disconnected6.BFS(5));
+        assertEquals(expectedTest3Origin1, disconnected15.BFS(1));
+        assertEquals(expectedTest3Origin7, disconnected15.BFS(7));
+        assertEquals(expectedTest3Origin11, disconnected15.BFS(11));
+
+    }
 //
 //    @Test
 //    void DFS() {
