@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Arrays;
 
 // Para ler o arquivo de entrada:
 import java.io.File;
@@ -241,13 +242,15 @@ public class Graph {
         // que eles indexam a partir do 1 (consistente com alguns outros
         // métodos)
 
-        Array.fill(known, false);
+        Arrays.fill(known, false);
 
         LinkedList<Integer> queue = new LinkedList<Integer>();
         ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
 
         known[origin] = true;   //Marcamos o vertice origem
         queue.add(origin);        //e o adicionamos na fila
+        connectedToOrigin.add(origin);  // não literalmente, mas faz parte da
+        // componente conexa
 
         // Por enquanto só coloquei os blocos no if p/ testar os métodos,
         // depois vejo melhor o que mais eles têm em comum e como melhor dar
