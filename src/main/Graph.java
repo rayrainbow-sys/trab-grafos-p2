@@ -272,7 +272,7 @@ public class Graph {
      * Retorna a componente conexa a qual o vertice de origem pertence.
      * @param origin
      */    
-    public void BFSMatrix(int origin) {
+    public ArrayList<Integer> BFSMatrix(int origin) {
         // o retorno não deve ser void, aind a não definimos
         //throw new UnsupportedOperationException("Ainda nao implementado");
 
@@ -311,12 +311,37 @@ public class Graph {
         }
         return connectedToOrigin;
     }
+    
+    public Arraylist<Integer> DFSList(int origin) {
+        //Array booleano com a marcacao dos vertices
+        //Todos os vertices sao desmarcados a principio
+        boolean visited[] = new Boolean[nNodes];
+        Arrays.fill(visited, false);
+
+        //Marcamos o vertice de origem
+        visited[origin] = true;
+
+        Iterator<Integer> iter = adjList.get(origin).listIterator();
+
+        while (iter.hasNext()) {
+            int w = iter.next();
+            if (!visited[w]) {
+                DFSList(w);
+            }
+        }
+
+        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
+        for (int i = 0; i < visited.length(); i++) {
+            if (visited[i] == true) connectedToOrigin.add(i);
+        }
+        return connectedToOrigin;
+    }
 
     /**
      * Implementa a busca em profundidade.
      * @param origin Índice do vértice a ser usado como origem da busca.
      */
-    public void DFS(int origin) {
+    public Arraylist<Integer> DFSMatrix(int origin) {
         // o retorno não deve ser void, ainda não definimos
         throw new UnsupportedOperationException("Ainda nao implementado");
     }
