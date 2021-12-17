@@ -170,22 +170,22 @@ public class Graph {
      * @return HashMap em que o índice "min" corresponde ao grau mínimo, "max" ao
      * máximo, "mean" ao grau médio e "med" ao grau mediano.
      */
-    public HashMap<String, Integer> getDegreeOverview() {
-        HashMap<String, Integer> data = new HashMap<String, Integer>();
+    public HashMap<String, Double> getDegreeOverview() {
+        HashMap<String, Double> data = new HashMap<String, Double>();
 
-        data.put("max", 0);
-        data.put("min", this.getNNodes() + 1);  // impossível ser >=
-        data.put("mean", 2 * this.getNNodes() / this.getNEdges());
-//        data.put("med", 0);
+        data.put("max", 0.0);
+        data.put("min", ((double) this.getNNodes()) + 1.0);  // impossível ser >=
+        data.put("mean",
+                2.0 * ((double) this.getNEdges()) / ((double) this.getNNodes()));
 
-        ArrayList<Integer> degrees = new ArrayList<Integer>();
+        ArrayList<Double> degrees = new ArrayList<Double>();
 
-        degrees.add(0);  // ignorando o índice 0
+        degrees.add(0.0);  // ignorando o índice 0
 
         int n = this.getNNodes();
 
         for (int i=1; i <= n; i++) {
-            int deg = this.getDegree(i);
+            double deg = (double) this.getDegree(i);
             degrees.add(deg);
 
             if (deg > data.get("max")) {
@@ -205,8 +205,6 @@ public class Graph {
 
         return data;
     }
-
-    // max, min, médio, mediano: melhor função ou fazer no main?
 
     /**
      * Calcula e retorna a distância entre dois nós, definida como o comprimento do caminho
