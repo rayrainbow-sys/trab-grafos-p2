@@ -275,45 +275,41 @@ public class Graph {
      * Retorna a componente conexa a qual o vertice de origem pertence.
      * @param origin Índice do vértice a ser usado como origem da busca.
      */
-//    public ArrayList<Integer> BFSMatrix(int origin) {
-//        // o retorno não deve ser void, aind a não definimos
-//        //throw new UnsupportedOperationException("Ainda nao implementado");
-//
-//        //Array booleano com a marcacao dos vertices
-//        //Todos os vertices sao desmarcados a principio
-//        boolean visited[] = new Boolean[nNodes];
-//        Arrays.fill(visited, false);
-//
-//        LinkedList<Integer> queue = new LinkedList();
-//
-//        //Marcamos o vertice origem e o adicionamos à fila
-//        queue.add(origin);
-//        visited[origin] = true;
-//
-//        ArrayList<Integer> mtxVertexRow = adjMatrix.get(origin);
-//
-//        while (queue.size() != 0) {
-//            int v = queue.remove();
-//
-//            Iterator<Integer> iter = mtxVertexRow.iterator();
-//
-//            while (iter.hasNext()) {
-//                int w = iter.next();
-//
-//                if (w == 1) {
-//                    if (!visited[w]) {
-//                        visited[w] = true;
-//                        queue.add(w);
-//                    }
-//                }
-//            }
-//        }
-//        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
-//        for (int i = 0; i < visited.length(); i++) {
-//            if (visited[i] == true) connectedToOrigin.add(i);
-//        }
-//        return connectedToOrigin;
-//    }
+    public ArrayList<Integer> BFSMatrix(int origin) {
+        //Array booleano com a marcacao dos vertices
+        //Todos os vertices sao desmarcados a principio
+        Boolean known[] = new Boolean[this.getNNodes() + 1];
+        Array.fill(known, false);
+
+        LinkedList<Integer> queue = new LinkedList();
+        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
+
+        //Marcamos o vertice origem e o adicionamos à fila
+        queue.add(origin);
+        known[origin] = true;
+
+        ArrayList<Integer> mtxVertexRow = adjMatrix.get(origin);
+        
+        while (queue.size() != 0) {
+            int v = queue.remove();
+
+            Iterator<Integer> iter = mtxVertexRow.iterator();
+
+            while (iter.hasNext()) {
+                int w = iter.next();
+
+                if (w == 1) {
+                    if (!known[w]) {
+                        known[w] = true;
+                        connectedToOrigin.add(w);
+                        queue.add(w);
+                    }
+                }
+            }
+        }
+
+        return connectedToOrigin;
+    }
 //
 //    public Arraylist<Integer> DFSList(int origin) {
 //        //Array booleano com a marcacao dos vertices
