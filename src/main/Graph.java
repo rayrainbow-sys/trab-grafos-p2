@@ -229,12 +229,41 @@ public class Graph {
     }
 
     /**
-     * Implementa a busca em largura.
+     * Implementa a busca em largura para representação do grafo por lista de adjacência.
+     * Retorna uma ArrayList dos vertices marcados a partir do vertice de origem,
+     * ou seja, a componente conexa a qual o vertice de origem pertence.
      * @param origin Índice do vértice a ser usado como origem da busca.
      */
-    public void BFS(int origin) {
-        // o retorno não deve ser void, ainda não definimos
-        throw new UnsupportedOperationException("Ainda nao implementado");
+    public ArrayList<Integer> BFSList(int origin) {
+        //Array booleano com a marcacao dos vertices
+        //Todos os vertices sao desmarcados a principio
+        boolean visited[] = new Boolean[nNodes];
+        Arrays.fill(visited, false);
+
+        LinkedList<Integer> queue = new LinkedList();
+
+        visited[origin] = true;   //Marcamos o vertice origem
+        queue.add(origin);        //e o adicionamos na fila
+
+        while (queue.size() != 0) {
+            int v = queue.remove();
+
+            Iterator<Integer> iter = adjList.get(v).listIterator();
+
+            while (iter.hasNext()) {
+                int w = iter.next();
+
+                if (!visited[w]) {
+                    visited[w] = true;
+                    queue.add(w);
+                }
+            }
+        }
+        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
+        for (int i = 0; i < visited.length(); i++) {
+            if (visited[i] == true) connectedToOrigin.add(i);
+        }
+        return connectedToOrigin;
     }
 
     /**
