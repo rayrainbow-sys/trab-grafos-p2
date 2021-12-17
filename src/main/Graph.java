@@ -267,11 +267,10 @@ public class Graph {
     }
     
     /**
-     * Implemente a busca em largura para representacao do grafo em
-     * matriz de adjacencia.
+     * Implementa a busca em profundidade para o grafo representado por lista de adjacencia.
      * Retorna a componente conexa a qual o vertice de origem pertence.
-     * @param origin
-     */    
+     * @param origin Índice do vértice a ser usado como origem da busca.
+     */
     public ArrayList<Integer> BFSMatrix(int origin) {
         // o retorno não deve ser void, aind a não definimos
         //throw new UnsupportedOperationException("Ainda nao implementado");
@@ -338,7 +337,8 @@ public class Graph {
     }
 
     /**
-     * Implementa a busca em profundidade.
+     * Implementa a busca em profundidade para o grafo representado por matriz de adjacencia.
+     * Retorna a componente conexa a qual o vertice de origem pertence.
      * @param origin Índice do vértice a ser usado como origem da busca.
      */
     public Arraylist<Integer> DFSMatrix(int origin) {
