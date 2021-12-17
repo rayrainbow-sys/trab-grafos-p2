@@ -275,23 +275,27 @@ public class Graph {
                 }
             }
         } else {  // repr por matriz
-            ArrayList<Integer> mtxVertexRow = adjMatrix.get(origin);
 
             while (queue.size() != 0) {
                 int v = queue.remove();
+                ArrayList<Integer> mtxVertexRow = adjMatrix.get(v);
 
                 Iterator<Integer> iter = mtxVertexRow.iterator();
+
+                int colCounter = 0;
 
                 while (iter.hasNext()) {
                     int w = iter.next();
 
                     if (w == 1) {
-                        if (!known[w]) {
-                            known[w] = true;
-                            connectedToOrigin.add(w);
-                            queue.add(w);
+                        if (!known[colCounter]) {
+                            known[colCounter] = true;
+                            connectedToOrigin.add(colCounter);
+                            queue.add(colCounter);
                         }
                     }
+
+                    colCounter++;
                 }
             }
         }
