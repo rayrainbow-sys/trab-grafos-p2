@@ -230,7 +230,7 @@ public class Graph {
      * ou seja, a componente conexa a qual o vertice de origem pertence.
      * @param origin Índice do vértice a ser usado como origem da busca.
      */
-    public ArrayList<Integer> BFSList(int origin) {
+    public ArrayList<Integer> BFS(int origin) {
         //Array booleano com a marcacao dos vertices
         //Todos os vertices sao desmarcados a principio
         Boolean known[] = new Boolean[this.getNNodes() + 1];
@@ -249,60 +249,45 @@ public class Graph {
         known[origin] = true;   //Marcamos o vertice origem
         queue.add(origin);        //e o adicionamos na fila
 
-        while (queue.size() != 0) {
-            int v = queue.remove();
+        // Por enquanto só coloquei os blocos no if p/ testar os métodos,
+        // depois vejo melhor o que mais eles têm em comum e como melhor dar
+        // esse "merge"
 
-            Iterator<Integer> iter = adjList.get(v).listIterator();
+        if (this.adjMatrix == null) {  // repr por lista
+            while (queue.size() != 0) {
+                int v = queue.remove();
 
-            while (iter.hasNext()) {
-                int w = iter.next();
+                Iterator<Integer> iter = adjList.get(v).listIterator();
 
-                if (!known[w]) {
-                    known[w] = true;
-                    connectedToOrigin.add(w);
-                    // movi a linha acima p/ dentro deste loop p/ ter um loop
-                    // a menos
-                    queue.add(w);
-                }
-            }
-        }
+                while (iter.hasNext()) {
+                    int w = iter.next();
 
-        return connectedToOrigin;
-    }
-
-    /**
-     * Implementa a busca em profundidade para o grafo representado por lista de adjacencia.
-     * Retorna a componente conexa a qual o vertice de origem pertence.
-     * @param origin Índice do vértice a ser usado como origem da busca.
-     */
-    public ArrayList<Integer> BFSMatrix(int origin) {
-        //Array booleano com a marcacao dos vertices
-        //Todos os vertices sao desmarcados a principio
-        Boolean known[] = new Boolean[this.getNNodes() + 1];
-        Array.fill(known, false);
-
-        LinkedList<Integer> queue = new LinkedList();
-        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
-
-        //Marcamos o vertice origem e o adicionamos à fila
-        queue.add(origin);
-        known[origin] = true;
-
-        ArrayList<Integer> mtxVertexRow = adjMatrix.get(origin);
-        
-        while (queue.size() != 0) {
-            int v = queue.remove();
-
-            Iterator<Integer> iter = mtxVertexRow.iterator();
-
-            while (iter.hasNext()) {
-                int w = iter.next();
-
-                if (w == 1) {
                     if (!known[w]) {
                         known[w] = true;
                         connectedToOrigin.add(w);
+                        // movi a linha acima p/ dentro deste loop p/ ter um loop
+                        // a menos
                         queue.add(w);
+                    }
+                }
+            }
+        } else {  // repr por matriz
+            ArrayList<Integer> mtxVertexRow = adjMatrix.get(origin);
+
+            while (queue.size() != 0) {
+                int v = queue.remove();
+
+                Iterator<Integer> iter = mtxVertexRow.iterator();
+
+                while (iter.hasNext()) {
+                    int w = iter.next();
+
+                    if (w == 1) {
+                        if (!known[w]) {
+                            known[w] = true;
+                            connectedToOrigin.add(w);
+                            queue.add(w);
+                        }
                     }
                 }
             }
@@ -310,6 +295,47 @@ public class Graph {
 
         return connectedToOrigin;
     }
+
+//    /**
+//     * Implementa a busca em profundidade para o grafo representado por lista de adjacencia.
+//     * Retorna a componente conexa a qual o vertice de origem pertence.
+//     * @param origin Índice do vértice a ser usado como origem da busca.
+//     */
+//    public ArrayList<Integer> BFSMatrix(int origin) {
+//        //Array booleano com a marcacao dos vertices
+//        //Todos os vertices sao desmarcados a principio
+//        Boolean known[] = new Boolean[this.getNNodes() + 1];
+//        Array.fill(known, false);
+//
+//        LinkedList<Integer> queue = new LinkedList<Integer>();
+//        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
+//
+//        //Marcamos o vertice origem e o adicionamos à fila
+//        queue.add(origin);
+//        known[origin] = true;
+//
+//        ArrayList<Integer> mtxVertexRow = adjMatrix.get(origin);
+//
+//        while (queue.size() != 0) {
+//            int v = queue.remove();
+//
+//            Iterator<Integer> iter = mtxVertexRow.iterator();
+//
+//            while (iter.hasNext()) {
+//                int w = iter.next();
+//
+//                if (w == 1) {
+//                    if (!known[w]) {
+//                        known[w] = true;
+//                        connectedToOrigin.add(w);
+//                        queue.add(w);
+//                    }
+//                }
+//            }
+//        }
+//
+//        return connectedToOrigin;
+//    }
 //
 //    public Arraylist<Integer> DFSList(int origin) {
 //        //Array booleano com a marcacao dos vertices
