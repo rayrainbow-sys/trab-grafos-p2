@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +14,13 @@ class GraphTest {
     private static main.Graph disconnected6;
     private static main.Graph disconnected15;
 
-    private static double eps = 1e-6;  // p/ comparações de floats
+    private static main.Graph bfsTreeM6;  // raiz: nó 6
+    private static main.Graph bfsTreeL6;
+
+    private static main.Graph dfsTreeM4;  // raiz: nó 4
+    private static main.Graph dfsTreeL4;
+
+    private static final double eps = 1e-6;  // p/ comparações de floats
 
     @BeforeAll
     static void setUp() {
@@ -41,10 +46,24 @@ class GraphTest {
             System.err.println("Falha na criacao do grafo manual 2");
         }
 
-        try {  // vai falhar
+        try {
             disconnected15 = new main.Graph("src/test/input/teste3.txt", 1);
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo manual 3");
+        }
+
+        try {
+            bfsTreeM6 = new main.Graph("src/test/input/bfstree_root6.txt", 0);
+            bfsTreeL6 = new main.Graph("src/test/input/bfstree_root6.txt", 1);
+        } catch (InstantiationException exc) {
+            System.err.println("Falha na criacao do grafo da BFS (slide)");
+        }
+
+        try {
+            dfsTreeM4 = new main.Graph("src/test/input/dfstree_root4.txt", 0);
+            dfsTreeL4 = new main.Graph("src/test/input/dfstree_root4.txt", 1);
+        } catch (InstantiationException exc) {
+            System.err.println("Falha na criacao do grafo da DFS (slide)");
         }
     }
 

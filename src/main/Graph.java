@@ -30,7 +30,7 @@ public class Graph {
     public Graph(String filepath, int reprChoice) throws InstantiationException {
         if (reprChoice != 1 && reprChoice !=0) {
             System.err.println("Argumento invalido: use 0 para representacao " +
-                    "por matriz, 1 para grafo");
+                    "por matriz, 1 para lista");
             throw new InstantiationException("Arquivo de entrada inexistente; grafo nao instanciado");
         }  // else
 
