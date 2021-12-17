@@ -342,8 +342,29 @@ public class Graph {
      * @param origin Índice do vértice a ser usado como origem da busca.
      */
     public Arraylist<Integer> DFSMatrix(int origin) {
-        // o retorno não deve ser void, ainda não definimos
-        throw new UnsupportedOperationException("Ainda nao implementado");
+        //Array booleano com a marcacao dos vertices
+        //Todos os vertices sao desmarcados a principio
+        boolean visited[] = new Boolean[nNodes];
+        Arrays.fill(visited, false);
+
+        //Marcamos o vertice de origem
+        visited[origin] = true;
+
+        ArrayList<Integer> mtxVertexRow = adjMatrix.get(origin);
+        Iterator<Integer> iter = mtxVertexRow.iterator();
+
+        while (iter.hasNext()) {
+            int w = iter.next();
+            if (!visited[w]) {
+                DFSList(w);
+            }
+        }
+
+        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
+        for (int i = 0; i < visited.length(); i++) {
+            if (visited[i] == true) connectedToOrigin.add(i);
+        }
+        return connectedToOrigin;
     }
 
     /**
