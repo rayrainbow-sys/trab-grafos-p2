@@ -173,8 +173,6 @@ public class Graph {
     public HashMap<String, Double> getDegreeOverview() {
         HashMap<String, Double> data = new HashMap<String, Double>();
 
-        data.put("max", 0.0);
-        data.put("min", ((double) this.getNNodes()) + 1.0);  // impossível ser >=
         data.put("mean",
                 2.0 * ((double) this.getNEdges()) / ((double) this.getNNodes()));
 
@@ -187,20 +185,17 @@ public class Graph {
         for (int i=1; i <= n; i++) {
             double deg = (double) this.getDegree(i);
             degrees.add(deg);
-
-            if (deg > data.get("max")) {
-                data.put("max", deg);
-            } else if (deg < data.get("min")) {
-                data.put("min", deg);
-            }
         }
 
         Collections.sort(degrees);  // sorts in place
 
+        data.put("max", degrees.get(n));
+        data.put("min", degrees.get(1));  // pula o 0
+
         if (n % 2 == 0) {
-            data.put("med", (degrees.get(n /2) + degrees.get(n /2 + 1)) / 2);
+            data.put("med", (degrees.get(n/2) + degrees.get(n/2 + 1)) / 2);
         } else {
-            data.put("med", degrees.get(n /2 + 1));
+            data.put("med", degrees.get(n/2 + 1));
         }
 
         return data;
@@ -234,138 +229,138 @@ public class Graph {
      * ou seja, a componente conexa a qual o vertice de origem pertence.
      * @param origin Índice do vértice a ser usado como origem da busca.
      */
-    public ArrayList<Integer> BFSList(int origin) {
-        //Array booleano com a marcacao dos vertices
-        //Todos os vertices sao desmarcados a principio
-        boolean visited[] = new Boolean[nNodes];
-        Arrays.fill(visited, false);
-
-        LinkedList<Integer> queue = new LinkedList();
-
-        visited[origin] = true;   //Marcamos o vertice origem
-        queue.add(origin);        //e o adicionamos na fila
-
-        while (queue.size() != 0) {
-            int v = queue.remove();
-
-            Iterator<Integer> iter = adjList.get(v).listIterator();
-
-            while (iter.hasNext()) {
-                int w = iter.next();
-
-                if (!visited[w]) {
-                    visited[w] = true;
-                    queue.add(w);
-                }
-            }
-        }
-        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
-        for (int i = 0; i < visited.length(); i++) {
-            if (visited[i] == true) connectedToOrigin.add(i);
-        }
-        return connectedToOrigin;
-    }
-    
+//    public ArrayList<Integer> BFSList(int origin) {
+//        //Array booleano com a marcacao dos vertices
+//        //Todos os vertices sao desmarcados a principio
+//        boolean visited[] = new Boolean[nNodes];
+//        Arrays.fill(visited, false);
+//
+//        LinkedList<Integer> queue = new LinkedList();
+//
+//        visited[origin] = true;   //Marcamos o vertice origem
+//        queue.add(origin);        //e o adicionamos na fila
+//
+//        while (queue.size() != 0) {
+//            int v = queue.remove();
+//
+//            Iterator<Integer> iter = adjList.get(v).listIterator();
+//
+//            while (iter.hasNext()) {
+//                int w = iter.next();
+//
+//                if (!visited[w]) {
+//                    visited[w] = true;
+//                    queue.add(w);
+//                }
+//            }
+//        }
+//        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
+//        for (int i = 0; i < visited.length(); i++) {
+//            if (visited[i] == true) connectedToOrigin.add(i);
+//        }
+//        return connectedToOrigin;
+//    }
+//
     /**
      * Implementa a busca em profundidade para o grafo representado por lista de adjacencia.
      * Retorna a componente conexa a qual o vertice de origem pertence.
      * @param origin Índice do vértice a ser usado como origem da busca.
      */
-    public ArrayList<Integer> BFSMatrix(int origin) {
-        // o retorno não deve ser void, aind a não definimos
-        //throw new UnsupportedOperationException("Ainda nao implementado");
-
-        //Array booleano com a marcacao dos vertices
-        //Todos os vertices sao desmarcados a principio
-        boolean visited[] = new Boolean[nNodes];
-        Arrays.fill(visited, false);
-
-        LinkedList<Integer> queue = new LinkedList();
-
-        //Marcamos o vertice origem e o adicionamos à fila
-        queue.add(origin);
-        visited[origin] = true;
-
-        ArrayList<Integer> mtxVertexRow = adjMatrix.get(origin);
-
-        while (queue.size() != 0) {
-            int v = queue.remove();
-
-            Iterator<Integer> iter = mtxVertexRow.iterator();
-
-            while (iter.hasNext()) {
-                int w = iter.next();
-
-                if (w == 1) {
-                    if (!visited[w]) {
-                        visited[w] = true;
-                        queue.add(w);
-                    }
-                }
-            }
-        }
-        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
-        for (int i = 0; i < visited.length(); i++) {
-            if (visited[i] == true) connectedToOrigin.add(i);
-        }
-        return connectedToOrigin;
-    }
-    
-    public Arraylist<Integer> DFSList(int origin) {
-        //Array booleano com a marcacao dos vertices
-        //Todos os vertices sao desmarcados a principio
-        boolean visited[] = new Boolean[nNodes];
-        Arrays.fill(visited, false);
-
-        //Marcamos o vertice de origem
-        visited[origin] = true;
-
-        Iterator<Integer> iter = adjList.get(origin).listIterator();
-
-        while (iter.hasNext()) {
-            int w = iter.next();
-            if (!visited[w]) {
-                DFSList(w);
-            }
-        }
-
-        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
-        for (int i = 0; i < visited.length(); i++) {
-            if (visited[i] == true) connectedToOrigin.add(i);
-        }
-        return connectedToOrigin;
-    }
+//    public ArrayList<Integer> BFSMatrix(int origin) {
+//        // o retorno não deve ser void, aind a não definimos
+//        //throw new UnsupportedOperationException("Ainda nao implementado");
+//
+//        //Array booleano com a marcacao dos vertices
+//        //Todos os vertices sao desmarcados a principio
+//        boolean visited[] = new Boolean[nNodes];
+//        Arrays.fill(visited, false);
+//
+//        LinkedList<Integer> queue = new LinkedList();
+//
+//        //Marcamos o vertice origem e o adicionamos à fila
+//        queue.add(origin);
+//        visited[origin] = true;
+//
+//        ArrayList<Integer> mtxVertexRow = adjMatrix.get(origin);
+//
+//        while (queue.size() != 0) {
+//            int v = queue.remove();
+//
+//            Iterator<Integer> iter = mtxVertexRow.iterator();
+//
+//            while (iter.hasNext()) {
+//                int w = iter.next();
+//
+//                if (w == 1) {
+//                    if (!visited[w]) {
+//                        visited[w] = true;
+//                        queue.add(w);
+//                    }
+//                }
+//            }
+//        }
+//        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
+//        for (int i = 0; i < visited.length(); i++) {
+//            if (visited[i] == true) connectedToOrigin.add(i);
+//        }
+//        return connectedToOrigin;
+//    }
+//
+//    public Arraylist<Integer> DFSList(int origin) {
+//        //Array booleano com a marcacao dos vertices
+//        //Todos os vertices sao desmarcados a principio
+//        boolean visited[] = new Boolean[nNodes];
+//        Arrays.fill(visited, false);
+//
+//        //Marcamos o vertice de origem
+//        visited[origin] = true;
+//
+//        Iterator<Integer> iter = adjList.get(origin).listIterator();
+//
+//        while (iter.hasNext()) {
+//            int w = iter.next();
+//            if (!visited[w]) {
+//                DFSList(w);
+//            }
+//        }
+//
+//        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
+//        for (int i = 0; i < visited.length(); i++) {
+//            if (visited[i] == true) connectedToOrigin.add(i);
+//        }
+//        return connectedToOrigin;
+//    }
 
     /**
      * Implementa a busca em profundidade para o grafo representado por matriz de adjacencia.
      * Retorna a componente conexa a qual o vertice de origem pertence.
      * @param origin Índice do vértice a ser usado como origem da busca.
      */
-    public Arraylist<Integer> DFSMatrix(int origin) {
-        //Array booleano com a marcacao dos vertices
-        //Todos os vertices sao desmarcados a principio
-        boolean visited[] = new Boolean[nNodes];
-        Arrays.fill(visited, false);
-
-        //Marcamos o vertice de origem
-        visited[origin] = true;
-
-        ArrayList<Integer> mtxVertexRow = adjMatrix.get(origin);
-        Iterator<Integer> iter = mtxVertexRow.iterator();
-
-        while (iter.hasNext()) {
-            int w = iter.next();
-            if (!visited[w]) {
-                DFSList(w);
-            }
-        }
-
-        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
-        for (int i = 0; i < visited.length(); i++) {
-            if (visited[i] == true) connectedToOrigin.add(i);
-        }
-        return connectedToOrigin;
-    }
+//    public Arraylist<Integer> DFSMatrix(int origin) {
+//        //Array booleano com a marcacao dos vertices
+//        //Todos os vertices sao desmarcados a principio
+//        boolean visited[] = new Boolean[nNodes];
+//        Arrays.fill(visited, false);
+//
+//        //Marcamos o vertice de origem
+//        visited[origin] = true;
+//
+//        ArrayList<Integer> mtxVertexRow = adjMatrix.get(origin);
+//        Iterator<Integer> iter = mtxVertexRow.iterator();
+//
+//        while (iter.hasNext()) {
+//            int w = iter.next();
+//            if (!visited[w]) {
+//                DFSList(w);
+//            }
+//        }
+//
+//        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
+//        for (int i = 0; i < visited.length(); i++) {
+//            if (visited[i] == true) connectedToOrigin.add(i);
+//        }
+//        return connectedToOrigin;
+//    }
 
     /**
      * Determina as componentes conexas do grafo.
