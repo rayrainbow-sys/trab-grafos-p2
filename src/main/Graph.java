@@ -230,15 +230,19 @@ public class Graph {
 
     /**
      * Implementa a busca em largura a partir do vértice de origem
-     * especificado, retornando sua árvore geradora.
+     * especificado, retornando sua árvore geradora. Interrompe a BFS ao
+     * chegar ao vértice-alvo fornecido, caso este exista e esteja ligado
+     * à origem por algum caminho.
      * @param origin Índice do vértice a ser usado como origem da busca.
+     * @param goal Índice do vértice buscado.
      * @return HashMap cujas chaves são os índices dos nós presentes na
-     *          componente conexa que contém a raiz (incluindo a própria) e
-     *          cujos valores são arrays de inteiros cuja primeira posição
-     *          indica o pai de cada nó na árvore geradora e cuja segunda
-     *          posição indica o nível desse nó.
+     *          árvore geradora da BFS interrompida ao chegar ao nó-alvo
+     *          (caso chegue). Suas chaves são os índices dos nós (incluindo a
+     *          própria raiz e o alvo) e seus valores são arrays de inteiros
+     *          cuja primeira posição indica o pai de cada nó na árvore
+     *          geradora e cuja segunda posição indica o nível desse nó.
      */
-    public HashMap<Integer, Integer[]> BFS(int origin) {
+    public HashMap<Integer, Integer[]> BFS(int origin, int goal) {
         //Array booleano com a marcacao dos vertices
         //Todos os vertices sao desmarcados a principio
         Boolean known[] = new Boolean[this.getNNodes() + 1];
@@ -281,6 +285,10 @@ public class Graph {
                         // movi a linha acima p/ dentro deste loop p/ ter um loop
                         // a menos
                         queue.add(w);
+
+                        if (w == goal) {
+                            return connectedToOrigin;
+                        }
                     }
                 }
             }
@@ -304,6 +312,10 @@ public class Graph {
                             connectedToOrigin.put(colCounter, new Integer[]{v,
                                     vLvl + 1});
                             queue.add(colCounter);
+
+                            if (colCounter == goal) {
+                                return connectedToOrigin;
+                            }
                         }
                     }
 
@@ -313,6 +325,20 @@ public class Graph {
         }
 
         return connectedToOrigin;
+    }
+
+    /**
+     * Implementa a busca em largura a partir do vértice de origem
+     * especificado, retornando sua árvore geradora.
+     * @param origin Índice do vértice a ser usado como origem da busca.
+     * @return HashMap cujas chaves são os índices dos nós presentes na
+     *          componente conexa que contém a raiz (incluindo a própria) e
+     *          cujos valores são arrays de inteiros cuja primeira posição
+     *          indica o pai de cada nó na árvore geradora e cuja segunda
+     *          posição indica o nível desse nó.
+     */
+    public HashMap<Integer, Integer[]> BFS(int origin) {
+        return this.BFS(origin, -1);  // índice que certamente não existe
     }
 
     public HashMap<Integer, Integer[]> DFS(int origin) {
