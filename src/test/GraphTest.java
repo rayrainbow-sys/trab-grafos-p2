@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -175,24 +176,34 @@ class GraphTest {
     @DisplayName("Arvore geradora da BFS")
     void BFSTree() {
         // comparação com o slide da aula
+        ArrayList<HashMap<Integer, Integer[]>> bfsTrees =
+                new ArrayList<HashMap<Integer, Integer[]>>();
 
-        HashMap<Integer, Integer[]> mtxTree = bfsTreeM6.BFS(6);
+        bfsTrees.add(bfsTreeM6.BFS(6));
+        bfsTrees.add(bfsTreeL6.BFS(6));
 
-        for (int i = 1; i <= bfsTreeM6.getNNodes(); i++) {
-            assertTrue(mtxTree.containsKey(i), "Faltou " + i);
-            // é conexo
+        Iterator<HashMap<Integer, Integer[]>> treeIt = bfsTrees.iterator();
+
+        while(treeIt.hasNext()) {
+            HashMap<Integer, Integer[]> bfsTree = treeIt.next();
+
+            for (int i = 1; i <= bfsTreeM6.getNNodes(); i++) {
+                assertTrue(bfsTree.containsKey(i), "Faltou " + i);
+                // é conexo
+            }
+
+            // Testando níveis:
+            assertEquals(bfsTree.get(6)[1], 0);  // raiz tem nível 0
+            assertEquals(bfsTree.get(5)[1], 1);
+            assertEquals(bfsTree.get(1)[1], 2);
+            assertEquals(bfsTree.get(3)[1], 3);
+
+            // Testando pais:
+            assertEquals(bfsTree.get(2)[0], 6);
+            assertEquals(bfsTree.get(4)[0], 2);
+            assertEquals(bfsTree.get(3)[0], 1);
+
         }
-
-        // Testando níveis:
-        assertEquals(mtxTree.get(6)[1], 0);  // raiz tem nível 0
-        assertEquals(mtxTree.get(5)[1], 1);
-        assertEquals(mtxTree.get(1)[1], 2);
-        assertEquals(mtxTree.get(3)[1], 3);
-
-        // Testando pais:
-        assertEquals(mtxTree.get(2)[0], 6);
-        assertEquals(mtxTree.get(4)[0], 2);
-        assertEquals(mtxTree.get(3)[0], 1);
     }
 
 
