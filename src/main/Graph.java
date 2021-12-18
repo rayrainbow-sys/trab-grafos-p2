@@ -9,11 +9,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.Comparator;
 
 // Para ler o arquivo de entrada:
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class Graph {
     private int nNodes;
@@ -362,12 +364,47 @@ public class Graph {
 
         return sorted;
     }
+
     /**
      * Determina as componentes conexas do grafo.
+     * @return ArrayList de componentes conexas, ordenadas da maior para a
+     *          menor. Os índices dos nós de cada componente estão em ordem
+     *          crescente, conforme saída da função findConnectedComponent().
      */
-    public void findConnectedComponents() {
-        // o retorno não deve ser void, ainda não definimos
-        throw new UnsupportedOperationException("Ainda nao implementado");
+    public ArrayList<ArrayList<Integer>> findConnectedComponents() {
+        ArrayList<ArrayList<Integer>> components =
+                new ArrayList<ArrayList<Integer>>();
+
+        int n = this.getNNodes();
+        int found[] = new int[n + 1];
+        // int queueish[] = IntStream.rangeClosed(0, n).toArray();
+        // & conv to ll?
+
+        Arrays.fill(found, 0);
+
+        for (int i=1; i <= n; i++) {
+            if (found[i] == 0) {
+                ArrayList<Integer> component = this.findConnectedComponent(i);
+                components.add(component);
+
+                for (int node : component) {
+                    found[node] = 1;
+                }  // senão, pula
+            }
+        }
+
+        // Para ordenar ArrayLists de inteiros de acordo com seu comprimento:
+        Comparator<ArrayList<Integer>> onLength = new Comparator<ArrayList<Integer>>() {
+            @Override
+            public int compare(ArrayList<Integer> l1, ArrayList<Integer> l2) {
+                return l1.size() - l2.size();
+            }
+        };
+
+        Collections.sort(components, onLength);
+        Collections.reverse(components);  // ordem decrescente de tamanho
+
+        return components;
     }
 
 }
