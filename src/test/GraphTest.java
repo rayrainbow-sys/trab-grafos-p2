@@ -73,7 +73,7 @@ class GraphTest {
 //    }
 
     @Test
-    @DisplayName("Testa numero de nos")
+    @DisplayName("Numero de nos")
     void getNNodes() {
         assertEquals(5, pdfGraph.getNNodes());
         assertEquals(7, connected7.getNNodes());
@@ -82,13 +82,13 @@ class GraphTest {
     }
 
     @Test
-    @DisplayName("Testa numero de arestas")
+    @DisplayName("Numero de arestas")
     void getNEdges() {
         assertEquals(5, pdfGraph.getNEdges());
     }
 
     @Test
-    @DisplayName("Testa impressao da lista de vizinhos")
+    @DisplayName("Lista de vizinhos")
     void getNeighbors() {
         ArrayList<Integer> neighbors = pdfGraph.getNeighbors(1);
 
@@ -102,13 +102,13 @@ class GraphTest {
     }
 
     @Test
-    @DisplayName("Testa grau")
+    @DisplayName("Grau")
     void getDegree() {
       assertEquals(4, pdfGraph.getDegree(5));
     }
 
     @Test
-    @DisplayName("Testa resumo grau")
+    @DisplayName("\"Resumo\" grau")
     void getDegreeOverview() {
         HashMap<String, Double> pdfData = pdfGraph.getDegreeOverview();
 
@@ -148,7 +148,7 @@ class GraphTest {
     }
 
     @Test
-    @DisplayName("Testa identificação de componente conexa pela BFS")  // por
+    @DisplayName("Identificação de componente conexa pela BFS")  // por
         // enquanto
     void BFSComponent() {
         Set<Integer> d6con5 = disconnected6.BFS(5).keySet();
@@ -198,7 +198,7 @@ class GraphTest {
 
 
     @Test
-    @DisplayName("Testa identificação de componente conexa pela DFS")  // por
+    @DisplayName("Identificação de componente conexa pela DFS")  // por
         // enquanto
     void DFSComponent() {
         ArrayList<Integer> d6con5 = disconnected6.DFS(5);
