@@ -349,6 +349,20 @@ public class Graph {
 //    }
 
     /**
+     * Obtém a componente conexa do grafo contendo o nó indicado.
+     * @param node Índice do nó.
+     * @return ArrayList ordenada com os índices dos nós da componente.
+     */
+    public ArrayList<Integer> findConnectedComponent(int node) {
+        Set<Integer> elements = this.BFS(node).keySet();
+        ArrayList<Integer> sorted = new ArrayList<Integer>();
+
+        sorted.addAll(elements);
+        Collections.sort(sorted);
+
+        return sorted;
+    }
+    /**
      * Determina as componentes conexas do grafo.
      */
     public void findConnectedComponents() {

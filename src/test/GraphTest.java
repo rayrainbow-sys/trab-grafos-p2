@@ -208,7 +208,6 @@ class GraphTest {
         }
     }
 
-
     @Test
     @DisplayName("Identificação de componente conexa pela DFS")
     void DFSComponent() {
@@ -279,4 +278,29 @@ class GraphTest {
     void calcDiameter() {
         assertEquals(2, pdfGraph.calcDiameter());
     }
+
+    @Test
+    @DisplayName("Identificação de componente conexa pela função específica")
+    void findConnectedComponent() {
+        ArrayList<Integer> d6con5 = disconnected6.findConnectedComponent(5);
+
+        for (int i = 1; i <= disconnected6.getNNodes(); i++) {
+            if (i >= 5) {
+                assertEquals(true, d6con5.contains(i), "Faltou " + i);
+            } else {
+                assertEquals(false, d6con5.contains(i), i + " a mais");
+            }
+        }
+
+        ArrayList<Integer> d6con2 = disconnected6.findConnectedComponent(2);
+
+        for (int i = 1; i <= disconnected6.getNNodes(); i++) {
+            if (i < 5) {
+                assertEquals(true, d6con2.contains(i), "Faltou " + i);
+            } else {
+                assertEquals(false, d6con2.contains(i), i + " a mais");
+            }
+        }
+    }
+
 }
