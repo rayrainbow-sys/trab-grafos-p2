@@ -303,4 +303,25 @@ class GraphTest {
         }
     }
 
+    @Test
+    @DisplayName("Identificação de todas as componentes conexas pela função " +
+            "específica")
+    void findConnectedComponents() {
+        ArrayList<ArrayList<Integer>> d6cons =
+                disconnected6.findConnectedComponents();
+
+        assertEquals(2, d6cons.size(), d6cons.size() + " componentes " +
+                "encontradas");
+
+        for (int i = 1; i <= disconnected6.getNNodes(); i++) {
+            if (i >= 5) {
+                assertTrue(d6cons.get(1).contains(i), "Faltou " + i + " na 2a");
+                assertFalse(d6cons.get(0).contains(i), i + " a mais na 1a");
+            } else {
+                assertTrue(d6cons.get(0).contains(i), "Faltou " + i + " na 1a");
+                assertFalse(d6cons.get(1).contains(i), i + " a mais na 2a");
+            }
+        }
+    }
+
 }
