@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -150,7 +151,7 @@ class GraphTest {
     @DisplayName("Testa identificação de componente conexa pela BFS")  // por
         // enquanto
     void BFSComponent() {
-        ArrayList<Integer> d6con5 = disconnected6.BFS(5);
+        Set<Integer> d6con5 = disconnected6.BFS(5).keySet();
 
         for (int i=1; i<=disconnected6.getNNodes(); i++) {
             if (i >= 5) {
@@ -160,7 +161,7 @@ class GraphTest {
             }
         }
 
-        ArrayList<Integer> d6con2 = disconnected6.BFS(2);
+        Set<Integer> d6con2 = disconnected6.BFS(2).keySet();
 
         for (int i=1; i<=disconnected6.getNNodes(); i++) {
             if (i < 5) {
@@ -170,6 +171,31 @@ class GraphTest {
             }
         }
     }
+
+    @Test
+    @DisplayName("Arvore geradora da BFS")
+    void BFSTree() {
+        // comparação com o slide da aula
+
+        HashMap<Integer, Integer[]> mtxTree = bfsTreeM6.BFS(6);
+
+        for (int i=1; i<=bfsTreeM6.getNNodes(); i++) {
+            assertTrue(mtxTree.containsKey(i), "Faltou " + i);
+            // é conexo
+        }
+
+        // Testando níveis:
+        assertEquals(mtxTree.get(6)[1], 0);  // raiz tem nível 0
+        assertEquals(mtxTree.get(5)[1], 1);
+        assertEquals(mtxTree.get(1)[1], 2);
+        assertEquals(mtxTree.get(3)[1], 3);
+
+        // Testando pais:
+        assertEquals(mtxTree.get(2)[0], 6);
+        assertEquals(mtxTree.get(4)[0], 2);
+        assertEquals(mtxTree.get(3)[0], 1);
+    }
+
 
     @Test
     @DisplayName("Testa identificação de componente conexa pela DFS")  // por

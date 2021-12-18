@@ -1,6 +1,6 @@
 package main;
 
-// Para representação das adjacências:
+// Estruturas de dados etc.:
 import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Arrays;
+import java.util.Set;
 
 // Para ler o arquivo de entrada:
 import java.io.File;
@@ -226,8 +227,7 @@ public class Graph {
     }
 
     /**
-     * Implementa a busca em largura para representação do grafo por lista de adjacência.
-     * Retorna a componente conexa a qual o vertice de origem pertence.
+     * Implementa a busca em largura, retornando a componente conexa a qual o vertice de origem pertence.
      * @param origin Índice do vértice a ser usado como origem da busca.
      * @return ArrayList dos vertices marcados a partir do vertice de origem.
      */
