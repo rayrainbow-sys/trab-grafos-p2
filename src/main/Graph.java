@@ -227,9 +227,9 @@ public class Graph {
 
     /**
      * Implementa a busca em largura para representação do grafo por lista de adjacência.
-     * Retorna uma ArrayList dos vertices marcados a partir do vertice de origem,
-     * ou seja, a componente conexa a qual o vertice de origem pertence.
+     * Retorna a componente conexa a qual o vertice de origem pertence.
      * @param origin Índice do vértice a ser usado como origem da busca.
+     * @return ArrayList dos vertices marcados a partir do vertice de origem.
      */
     public ArrayList<Integer> BFS(int origin) {
         //Array booleano com a marcacao dos vertices
@@ -275,7 +275,6 @@ public class Graph {
                 }
             }
         } else {  // repr por matriz
-
             while (queue.size() != 0) {
                 int v = queue.remove();
                 ArrayList<Integer> mtxVertexRow = adjMatrix.get(v);
@@ -303,71 +302,9 @@ public class Graph {
         return connectedToOrigin;
     }
 
-//    /**
-//     * Implementa a busca em profundidade para o grafo representado por lista de adjacencia.
-//     * Retorna a componente conexa a qual o vertice de origem pertence.
-//     * @param origin Índice do vértice a ser usado como origem da busca.
-//     */
-//    public ArrayList<Integer> BFSMatrix(int origin) {
-//        //Array booleano com a marcacao dos vertices
-//        //Todos os vertices sao desmarcados a principio
-//        Boolean known[] = new Boolean[this.getNNodes() + 1];
-//        Array.fill(known, false);
-//
-//        LinkedList<Integer> queue = new LinkedList<Integer>();
-//        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
-//
-//        //Marcamos o vertice origem e o adicionamos à fila
-//        queue.add(origin);
-//        known[origin] = true;
-//
-//        ArrayList<Integer> mtxVertexRow = adjMatrix.get(origin);
-//
-//        while (queue.size() != 0) {
-//            int v = queue.remove();
-//
-//            Iterator<Integer> iter = mtxVertexRow.iterator();
-//
-//            while (iter.hasNext()) {
-//                int w = iter.next();
-//
-//                if (w == 1) {
-//                    if (!known[w]) {
-//                        known[w] = true;
-//                        connectedToOrigin.add(w);
-//                        queue.add(w);
-//                    }
-//                }
-//            }
-//        }
-//
-//        return connectedToOrigin;
-//    }
-//
-//    public Arraylist<Integer> DFSList(int origin) {
-//        //Array booleano com a marcacao dos vertices
-//        //Todos os vertices sao desmarcados a principio
-//        boolean visited[] = new Boolean[nNodes];
-//        Arrays.fill(visited, false);
-//
-//        //Marcamos o vertice de origem
-//        visited[origin] = true;
-//
-//        Iterator<Integer> iter = adjList.get(origin).listIterator();
-//
-//        while (iter.hasNext()) {
-//            int w = iter.next();
-//            if (!visited[w]) {
-//                DFSList(w);
-//            }
-//        }
-//
-//        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
-//        for (int i = 0; i < visited.length(); i++) {
-//            if (visited[i] == true) connectedToOrigin.add(i);
-//        }
-//        return connectedToOrigin;
-//    }
+    public ArrayList<Integer> DFS(int origin) {
+        throw new UnsupportedOperationException("Ainda nao implementado");
+    }
 
     /**
      * Implementa a busca em profundidade para o grafo representado por matriz de adjacencia.

@@ -123,8 +123,8 @@ class GraphTest {
         assertEquals(3.0, c7Data.get("max"));
         assertEquals(1.0, c7Data.get("min"));
         assertEquals(true, Math.abs(c7Data.get("mean") - 12.0/7.0) < eps, String.valueOf(c7Data.get("mean")));
-//        assertEquals(true, Math.abs(c7Data.get("med") - 1.5) < eps,
-//                String.valueOf(c7Data.get("med")));
+        assertEquals(true, Math.abs(c7Data.get("med") - 1.0) < eps,
+                String.valueOf(c7Data.get("med")));
         // (estava errado no doc? Rever o grafo)
 
         HashMap<String, Double> d6Data = disconnected6.getDegreeOverview();
@@ -140,18 +140,18 @@ class GraphTest {
         assertEquals(4.0, d15Data.get("max"));
         assertEquals(1.0, d15Data.get("min"));
         assertEquals(true, Math.abs(d15Data.get("mean") - 24.0/15.0) < eps, String.valueOf(d15Data.get("mean")));
-//        assertEquals(true, Math.abs(d15Data.get("med") - 2.5) < eps,
-//                String.valueOf(d15Data.get("med")));
+        assertEquals(true, Math.abs(d15Data.get("med") - 1.0
+                ) < eps,
+                String.valueOf(d15Data.get("med")));
         // (estava errado no doc? Rever o grafo)
     }
 
     @Test
     @DisplayName("Testa identificação de componente conexa pela BFS")  // por
         // enquanto
-    void BFS() {
+    void BFSComponent() {
         ArrayList<Integer> d6con5 = disconnected6.BFS(5);
 
-//        System.out.print(d6con5);
         for (int i=1; i<=disconnected6.getNNodes(); i++) {
             if (i >= 5) {
                 assertEquals(true, d6con5.contains(i), "Faltou " + i);
@@ -162,7 +162,6 @@ class GraphTest {
 
         ArrayList<Integer> d6con2 = disconnected6.BFS(2);
 
-//        System.out.print(d6con2);
         for (int i=1; i<=disconnected6.getNNodes(); i++) {
             if (i < 5) {
                 assertEquals(true, d6con2.contains(i), "Faltou " + i);
@@ -171,6 +170,32 @@ class GraphTest {
             }
         }
     }
+
+    @Test
+    @DisplayName("Testa identificação de componente conexa pela DFS")  // por
+        // enquanto
+    void DFSComponent() {
+        ArrayList<Integer> d6con5 = disconnected6.DFS(5);
+
+        for (int i=1; i<=disconnected6.getNNodes(); i++) {
+            if (i >= 5) {
+                assertEquals(true, d6con5.contains(i), "Faltou " + i);
+            } else {
+                assertEquals(false, d6con5.contains(i), i + " a mais");
+            }
+        }
+
+        ArrayList<Integer> d6con2 = disconnected6.DFS(2);
+
+        for (int i=1; i<=disconnected6.getNNodes(); i++) {
+            if (i < 5) {
+                assertEquals(true, d6con2.contains(i), "Faltou " + i);
+            } else {
+                assertEquals(false, d6con2.contains(i), i + " a mais");
+            }
+        }
+    }
+
     @Test
     void calcDistance() {
         assertEquals(2, pdfGraph.calcDistance(5, 2));
@@ -181,16 +206,3 @@ class GraphTest {
     void calcDiameter() {
          assertEquals(2, pdfGraph.calcDiameter());
     }
-//
-//    @Test
-//    void BFS() {
-//    }
-//
-//    @Test
-//    void DFS() {
-//    }
-//
-//    @Test
-//    void findConnectedComponents() {
-//    }
-}
