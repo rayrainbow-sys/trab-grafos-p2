@@ -149,7 +149,7 @@ class GraphTest {
     }
 
     @Test
-    @DisplayName("Identificação de componente conexa pela BFS")
+    @DisplayName("Componente conexa (BFS)")
     void BFSComponent() {
         Set<Integer> d6con5 = disconnected6.BFS(5).keySet();
 
@@ -209,7 +209,7 @@ class GraphTest {
     }
 
     @Test
-    @DisplayName("Identificação de componente conexa pela DFS")
+    @DisplayName("Componente conexa (DFS)")
     void DFSComponent() {
         Set<Integer> d6con5 = disconnected6.DFS(5).keySet();
 
@@ -269,6 +269,7 @@ class GraphTest {
     }
 
     @Test
+    @DisplayName("Distância entre nós")
     void calcDistance() {
         assertEquals(2, pdfGraph.calcDistance(1, 4));
         assertEquals(1, pdfGraph.calcDistance(5, 3));
@@ -278,12 +279,14 @@ class GraphTest {
     }
 
     @Test
+    @DisplayName("Diâmetro do grafo")
     void calcDiameter() {
         assertEquals(2, pdfGraph.calcDiameter());
+        assertEquals(-1, disconnected6.calcDiameter());
     }
 
     @Test
-    @DisplayName("Identificação de componente conexa pela função específica")
+    @DisplayName("Componente conexa (função específica)")
     void findConnectedComponent() {
         ArrayList<Integer> d6con5 = disconnected6.findConnectedComponent(5);
 
@@ -307,8 +310,7 @@ class GraphTest {
     }
 
     @Test
-    @DisplayName("Identificação de todas as componentes conexas pela função " +
-            "específica")
+    @DisplayName("Todas as componentes conexas (função específica)")
     void findConnectedComponents() {
         ArrayList<ArrayList<Integer>> d6cons =
                 disconnected6.findConnectedComponents();
