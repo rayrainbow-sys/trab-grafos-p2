@@ -227,11 +227,50 @@ public class Graph {
     /**
      * Calcula e retorna o diâmetro do grafo, definido como a maior distância entre dois
      * vértices.
-     * @return Diâmetro do grafo.
+     * @return Diâmetro do grafo; retorna -1 se este for infinito (grafo
+     *          desconexo).
      */
     public int calcDiameter() {
-        throw new UnsupportedOperationException("Ainda nao implementado");
-//        return -1;
+        int n = this.getNNodes();
+        int maxDist = 0;
+//        Integer[][] distMtx = new Integer[n + 1][n + 1];
+        // neste caso não precisaríamos pular o índice zero, porque só
+        // queremos saber _qual_ a "maior menor" distância, e não a que par
+        // de vértices ela está associada, mas usei n + 1 mesmo assim por
+        // clareza, só para lidar sempre com os mesmos índices
+
+        for (int i=1; i <= n; i++) {
+            HashMap<Integer, Integer[]> bfsTree = this.BFS(i);
+
+            if (i == 1 && bfsTree.size() < n) {
+                /* O grafo é conexo sse o primeiro nó está conectado a todos:
+                * se o primeiro nó está conectado a todos, existe um caminho
+                * de qualquer nó a qualquer nó passando pelo primeiro, logo,
+                * o grafo é conexo; se o grafo é conexo, em particular e por
+                * definição, a componente conexa que contém o primeiro nó
+                * contém todos os demais.
+                *
+                * Imaginei que seria menos custoso evitar a verificação do
+                * tamanho de bfsTree após a primeira iteração (o Java usa
+                * lazy evaluation para essas expressões lógicas; não chega na
+                *  segunda condição se a primeira for falsa). */
+                return -1;
+            }
+
+//            Arrays.fill(distMtx[i], 0);  // precisa? Ou pode deixar null?
+
+            for (int j=i+1; j <= n; j++) {
+                // se j = i, a dist é 0 mesmo, então pode pular
+                // se j < i, já verificou em iteração anterior
+                // (análogo a estar considerando apenas as entradas acima da
+                // diag principal numa matriz de distâncias entre nós)
+                if (bfsTree.get(j)[1] > maxDist) {
+                    maxDist = bfsTree.get(j)[1];
+                }
+            }
+        }
+
+        return maxDist;  // p/ o IntelliJ não chiar por enquanto
     }
 
     /**
