@@ -270,8 +270,11 @@ class GraphTest {
 
     @Test
     void calcDistance() {
-        assertEquals(2, pdfGraph.calcDistance(5, 2));
+        assertEquals(2, pdfGraph.calcDistance(1, 4));
         assertEquals(1, pdfGraph.calcDistance(5, 3));
+
+        assertEquals(3, disconnected6.calcDistance(4, 3));
+        assertEquals(-1, disconnected6.calcDistance(4, 5));
     }
 
     @Test

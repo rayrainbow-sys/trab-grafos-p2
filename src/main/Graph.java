@@ -214,8 +214,14 @@ public class Graph {
      * @return
      */
     public int calcDistance(int node1, int node2) {
-        throw new UnsupportedOperationException("Ainda nao implementado");
-//        return -1;
+        HashMap<Integer, Integer[]> spanningTree = this.BFS(node1, node2);
+        Integer[] node2Value = spanningTree.get(node2);
+
+        if (node2Value == null) {
+            return -1;  // não conectado; grau seria infinito
+        }
+
+        return node2Value[1];  // nível na árvore geradora
     }
 
     /**
