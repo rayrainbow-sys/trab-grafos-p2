@@ -227,11 +227,16 @@ public class Graph {
     }
 
     /**
-     * Implementa a busca em largura, retornando a componente conexa a qual o vertice de origem pertence.
+     * Implementa a busca em largura a partir do vértice de origem
+     * especificado, retornando sua árvore geradora.
      * @param origin Índice do vértice a ser usado como origem da busca.
-     * @return ArrayList dos vertices marcados a partir do vertice de origem.
+     * @return HashMap cujas chaves são os índices dos nós presentes na
+     *          componente conexa que contém a raiz (incluindo a própria) e
+     *          cujos valores são arrays de inteiros cuja primeira posição
+     *          indica o pai de cada nó na árvore geradora e cuja segunda
+     *          posição indica o nível desse nó.
      */
-    public ArrayList<Integer> BFS(int origin) {
+    public HashMap<Integer, Integer[]> BFS(int origin) {
         //Array booleano com a marcacao dos vertices
         //Todos os vertices sao desmarcados a principio
         Boolean known[] = new Boolean[this.getNNodes() + 1];
@@ -245,14 +250,13 @@ public class Graph {
         Arrays.fill(known, false);
 
         LinkedList<Integer> queue = new LinkedList<Integer>();
-        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
-        //TODO transformar em HashMap com chave Integer, valor Integer[2]
-        // (tipo {nó: [pai, nível]} na sintaxe do Python)
+        HashMap<Integer, Integer[]> connectedToOrigin = new HashMap<Integer,
+        Integer[]>();
+
 
         known[origin] = true;   //Marcamos o vertice origem
         queue.add(origin);        //e o adicionamos na fila
-        connectedToOrigin.add(origin);  // não literalmente, mas faz parte da
-        // componente conexa
+        connectedToOrigin.put(origin, new Integer[]{0, 0});
 
         // Por enquanto só coloquei os blocos no if p/ testar os métodos,
         // depois vejo melhor o que mais eles têm em comum e como melhor dar
@@ -261,6 +265,7 @@ public class Graph {
         if (this.adjMatrix == null) {  // repr por lista
             while (queue.size() != 0) {
                 int v = queue.remove();
+                int vLvl = connectedToOrigin.get(v)[1];
 
                 Iterator<Integer> iter = adjList.get(v).listIterator();
 
@@ -268,11 +273,9 @@ public class Graph {
                     int w = iter.next();
 
                     if (!known[w]) {
-                        // TODO adc v como pai
-                        // TODO adc nível de v + 1 (como quer que esteja
-                        //  keeping track desse nível)
                         known[w] = true;
-                        connectedToOrigin.add(w);
+                        connectedToOrigin.put(w, new Integer[]{v,
+                                vLvl + 1});
                         // movi a linha acima p/ dentro deste loop p/ ter um loop
                         // a menos
                         queue.add(w);
@@ -282,6 +285,8 @@ public class Graph {
         } else {  // repr por matriz
             while (queue.size() != 0) {
                 int v = queue.remove();
+                int vLvl = connectedToOrigin.get(v)[1];
+
                 ArrayList<Integer> mtxVertexRow = adjMatrix.get(v);
 
                 Iterator<Integer> iter = mtxVertexRow.iterator();
@@ -294,7 +299,8 @@ public class Graph {
                     if (w == 1) {
                         if (!known[colCounter]) {
                             known[colCounter] = true;
-                            connectedToOrigin.add(colCounter);
+                            connectedToOrigin.put(colCounter, new Integer[]{v,
+                                    vLvl + 1});
                             queue.add(colCounter);
                         }
                     }
