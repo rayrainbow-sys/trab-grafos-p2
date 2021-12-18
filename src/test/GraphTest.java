@@ -188,6 +188,8 @@ class GraphTest {
             HashMap<Integer, Integer[]> bfsTree = treeIt.next();
 
             for (int i = 1; i <= bfsTreeM6.getNNodes(); i++) {
+                // (ambas têm a mesma qtd de nós, estou usando o mesmo getter
+                // para simplificar)
                 assertTrue(bfsTree.containsKey(i), "Faltou " + i);
                 // é conexo
             }
@@ -228,6 +230,42 @@ class GraphTest {
             } else {
                 assertEquals(false, d6con2.contains(i), i + " a mais");
             }
+        }
+    }
+
+    @Test
+    @DisplayName("Arvore geradora da DFS")
+    void DFSTree() {
+        // comparação com o slide da aula
+        ArrayList<HashMap<Integer, Integer[]>> dfsTrees =
+                new ArrayList<HashMap<Integer, Integer[]>>();
+
+        dfsTrees.add(dfsTreeM4.BFS(4));
+        dfsTrees.add(dfsTreeL4.BFS(4));
+
+        Iterator<HashMap<Integer, Integer[]>> treeIt = dfsTrees.iterator();
+
+        while(treeIt.hasNext()) {
+            HashMap<Integer, Integer[]> dfsTree = treeIt.next();
+
+            for (int i = 1; i <= dfsTreeM4.getNNodes(); i++) {
+                // (ambas têm a mesma qtd de nós, estou usando o mesmo getter
+                // para simplificar)
+                assertTrue(dfsTree.containsKey(i), "Faltou " + i);
+                // é conexo
+            }
+
+            // Testando níveis:
+            assertEquals(dfsTree.get(4)[1], 0);  // raiz tem nível 0
+            assertEquals(dfsTree.get(6)[1], 1);
+            assertEquals(dfsTree.get(3)[1], 2);
+            assertEquals(dfsTree.get(8)[1], 3);
+
+            // Testando pais:
+            assertEquals(dfsTree.get(1)[0], 4);
+            assertEquals(dfsTree.get(5)[0], 6);
+            assertEquals(dfsTree.get(2)[0], 3);
+
         }
     }
 
