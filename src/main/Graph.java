@@ -313,7 +313,7 @@ public class Graph {
         return connectedToOrigin;
     }
 
-    public ArrayList<Integer> DFS(int origin) {
+    public HashMap<Integer, Integer[]> DFS(int origin) {
         throw new UnsupportedOperationException("Ainda nao implementado");
     }
 

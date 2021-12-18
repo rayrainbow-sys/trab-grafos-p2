@@ -212,7 +212,7 @@ class GraphTest {
     @Test
     @DisplayName("Identificação de componente conexa pela DFS")
     void DFSComponent() {
-        ArrayList<Integer> d6con5 = disconnected6.DFS(5);
+        Set<Integer> d6con5 = disconnected6.DFS(5).keySet();
 
         for (int i = 1; i <= disconnected6.getNNodes(); i++) {
             if (i >= 5) {
@@ -222,7 +222,7 @@ class GraphTest {
             }
         }
 
-        ArrayList<Integer> d6con2 = disconnected6.DFS(2);
+        Set<Integer> d6con2 = disconnected6.DFS(2).keySet();
 
         for (int i = 1; i <= disconnected6.getNNodes(); i++) {
             if (i < 5) {
