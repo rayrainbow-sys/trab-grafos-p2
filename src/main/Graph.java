@@ -211,7 +211,7 @@ public class Graph {
      * mais curto entre eles. O comprimento de um caminho é seu número de arestas.
      * @param node1 Índice de um nó.
      * @param node2 Índice de um nó.
-     * @return
+     * @return Distância entre node1 e node2; retorna -1 se esta for infinita.
      */
     public int calcDistance(int node1, int node2) {
         HashMap<Integer, Integer[]> spanningTree = this.BFS(node1, node2);
