@@ -246,6 +246,8 @@ public class Graph {
 
         LinkedList<Integer> queue = new LinkedList<Integer>();
         ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
+        //TODO transformar em HashMap com chave Integer, valor Integer[2]
+        // (tipo {nó: [pai, nível]} na sintaxe do Python)
 
         known[origin] = true;   //Marcamos o vertice origem
         queue.add(origin);        //e o adicionamos na fila
@@ -266,6 +268,9 @@ public class Graph {
                     int w = iter.next();
 
                     if (!known[w]) {
+                        // TODO adc v como pai
+                        // TODO adc nível de v + 1 (como quer que esteja
+                        //  keeping track desse nível)
                         known[w] = true;
                         connectedToOrigin.add(w);
                         // movi a linha acima p/ dentro deste loop p/ ter um loop
