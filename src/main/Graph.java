@@ -391,7 +391,7 @@ public class Graph {
     public HashMap<Integer, Integer[]> DFS(int origin, int goal) {
         //Array booleano com a marcacao dos vertices
         //Todos os vertices sao desmarcados a principio
-        Boolean explored[] = new Boolean[this.getNNodes + 1];
+        Boolean explored[] = new Boolean[this.getNNodes() + 1];
 
         //Enquanto que na BFS a marca de vertice denuncia que este foi descoberto, 
         //na DFS essa marca representa que o vertice foi explorado, ou seja, que todos 
@@ -453,9 +453,11 @@ public class Graph {
                 colCounter++;          
             }         
         }
+        return connectedToOrigin;
+    }
 
-        
-        
+    public HashMap<Integer, Integer[]> DFS(int origin) {
+        return this.BFS(origin, -1);  // índice que certamente não existe
     }
 
     /**
