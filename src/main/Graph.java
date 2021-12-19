@@ -383,10 +383,6 @@ public class Graph {
         return this.BFS(origin, -1);  // índice que certamente não existe
     }
 
-    public HashMap<Integer, Integer[]> DFS(int origin) {
-        throw new UnsupportedOperationException("Ainda nao implementado");
-    }
-
     /**
      * Implementa a busca em profundidade para o grafo representado por matriz de adjacencia.
      * Retorna a componente conexa a qual o vertice de origem pertence.
