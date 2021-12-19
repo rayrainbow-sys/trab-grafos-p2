@@ -1,11 +1,21 @@
 package main;
 
-// Para representação das adjacências:
-import java.util.*;
+// Estruturas de dados etc.:
+import java.lang.reflect.Array;
+import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.Comparator;
 
 // Para ler o arquivo de entrada:
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class Graph {
     private int nNodes;
@@ -24,7 +34,7 @@ public class Graph {
     public Graph(String filepath, int reprChoice) throws InstantiationException {
         if (reprChoice != 1 && reprChoice !=0) {
             System.err.println("Argumento invalido: use 0 para representacao " +
-                    "por matriz, 1 para grafo");
+                    "por matriz, 1 para lista");
             throw new InstantiationException("Arquivo de entrada inexistente; grafo nao instanciado");
         }  // else
 
@@ -168,8 +178,6 @@ public class Graph {
     public HashMap<String, Double> getDegreeOverview() {
         HashMap<String, Double> data = new HashMap<String, Double>();
 
-        data.put("max", 0.0);
-        data.put("min", ((double) this.getNNodes()) + 1.0);  // impossível ser >=
         data.put("mean",
                 2.0 * ((double) this.getNEdges()) / ((double) this.getNNodes()));
 
@@ -182,20 +190,17 @@ public class Graph {
         for (int i=1; i <= n; i++) {
             double deg = (double) this.getDegree(i);
             degrees.add(deg);
-
-            if (deg > data.get("max")) {
-                data.put("max", deg);
-            } else if (deg < data.get("min")) {
-                data.put("min", deg);
-            }
         }
 
         Collections.sort(degrees);  // sorts in place
 
+        data.put("max", degrees.get(n));
+        data.put("min", degrees.get(1));  // pula o 0
+
         if (n % 2 == 0) {
-            data.put("med", (degrees.get(n /2) + degrees.get(n /2 + 1)) / 2);
+            data.put("med", (degrees.get(n/2) + degrees.get(n/2 + 1)) / 2);
         } else {
-            data.put("med", degrees.get(n /2 + 1));
+            data.put("med", degrees.get(n/2 + 1));
         }
 
         return data;
@@ -206,108 +211,308 @@ public class Graph {
      * mais curto entre eles. O comprimento de um caminho é seu número de arestas.
      * @param node1 Índice de um nó.
      * @param node2 Índice de um nó.
-     * @return
+     * @return Distância entre node1 e node2; retorna -1 se esta for infinita.
      */
     public int calcDistance(int node1, int node2) {
-        throw new UnsupportedOperationException("Ainda nao implementado");
-//        return -1;
+        HashMap<Integer, Integer[]> spanningTree = this.BFS(node1, node2);
+        Integer[] node2Value = spanningTree.get(node2);
+
+        if (node2Value == null) {
+            return -1;  // não conectado; grau seria infinito
+        }
+
+        return node2Value[1];  // nível na árvore geradora
     }
 
     /**
      * Calcula e retorna o diâmetro do grafo, definido como a maior distância entre dois
      * vértices.
-     * @return Diâmetro do grafo.
+     * @return Diâmetro do grafo; retorna -1 se este for infinito (grafo
+     *          desconexo).
      */
     public int calcDiameter() {
-        throw new UnsupportedOperationException("Ainda nao implementado");
-//        return -1;
-    }
+        int n = this.getNNodes();
+        int maxDist = 0;
+//        Integer[][] distMtx = new Integer[n + 1][n + 1];
+        // neste caso não precisaríamos pular o índice zero, porque só
+        // queremos saber _qual_ a "maior menor" distância, e não a que par
+        // de vértices ela está associada, mas usei n + 1 mesmo assim por
+        // clareza, só para lidar sempre com os mesmos índices
 
-    /**
-     * Implementa a busca em largura e retorna uma ArrayList dos vertices marcados a partir do vertice de origem,
-     * ou seja, a componente conexa a qual o vertice de origem pertence.
-     * @param origin Índice do vértice a ser usado como origem da busca.
-     */
-    public ArrayList<Integer> BFS(int origin) {
-        //Array booleano com a marcacao dos vertices
-        //Todos os vertices sao desmarcados a principio
-        boolean[] visited = new boolean[nNodes];
-        Arrays.fill(visited, false);
+        for (int i=1; i <= n; i++) {
+            HashMap<Integer, Integer[]> bfsTree = this.BFS(i);
 
-        Iterator<Integer> iter;
-
-        LinkedList<Integer> queue = new LinkedList();
-
-        //Marcamos o vertice origem e o adicionamos na fila
-        queue.add(origin);        
-        visited[origin] = true;   
-        
-        while (queue.size() != 0) {
-            int v = queue.remove();
-
-            if (adjList != null) {
-                iter = adjList.get(v).listIterator();
-            } else {
-                iter = adjMatrix.get(origin).iterator();
+            if (i == 1 && bfsTree.size() < n) {
+                /* O grafo é conexo sse o primeiro nó está conectado a todos:
+                * se o primeiro nó está conectado a todos, existe um caminho
+                * de qualquer nó a qualquer nó passando pelo primeiro, logo,
+                * o grafo é conexo; se o grafo é conexo, em particular e por
+                * definição, a componente conexa que contém o primeiro nó
+                * contém todos os demais.
+                *
+                * Imaginei que seria menos custoso evitar a verificação do
+                * tamanho de bfsTree após a primeira iteração (o Java usa
+                * lazy evaluation para essas expressões lógicas; não chega na
+                *  segunda condição se a primeira for falsa). */
+                return -1;
             }
 
-            while (iter.hasNext()) {
-                int w = iter.next();
+//            Arrays.fill(distMtx[i], 0);  // precisa? Ou pode deixar null?
 
-                if (!visited[w]) {
-                    visited[w] = true;
-                    queue.add(w);
+            for (int j=i+1; j <= n; j++) {
+                // se j = i, a dist é 0 mesmo, então pode pular
+                // se j < i, já verificou em iteração anterior
+                // (análogo a estar considerando apenas as entradas acima da
+                // diag principal numa matriz de distâncias entre nós)
+                if (bfsTree.get(j)[1] > maxDist) {
+                    maxDist = bfsTree.get(j)[1];
                 }
             }
         }
-        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
-        for (int i = 0; i < visited.length; i++) {
-            if (visited[i]) connectedToOrigin.add(i);
-        }
-        return connectedToOrigin;
+
+        return maxDist;  // p/ o IntelliJ não chiar por enquanto
     }
-    
+
     /**
-     * Implementa a busca em profundidade e retorna a componente conexa a qual o vertice de origem pertence.
+     * Implementa a busca em largura a partir do vértice de origem
+     * especificado, retornando sua árvore geradora. Interrompe a BFS ao
+     * chegar ao vértice-alvo fornecido, caso este exista e esteja ligado
+     * à origem por algum caminho.
      * @param origin Índice do vértice a ser usado como origem da busca.
+     * @param goal Índice do vértice buscado.
+     * @return HashMap cujas chaves são os índices dos nós presentes na
+     *          árvore geradora da BFS interrompida ao chegar ao nó-alvo
+     *          (caso chegue). Suas chaves são os índices dos nós (incluindo a
+     *          própria raiz e o alvo) e seus valores são arrays de inteiros
+     *          cuja primeira posição indica o pai de cada nó na árvore
+     *          geradora e cuja segunda posição indica o nível desse nó.
      */
-    public ArrayList<Integer> DFS(int origin) {
+    public HashMap<Integer, Integer[]> BFS(int origin, int goal) {
         //Array booleano com a marcacao dos vertices
         //Todos os vertices sao desmarcados a principio
-        boolean visited[] = new boolean[nNodes];
-        Arrays.fill(visited, false);
+        Boolean known[] = new Boolean[this.getNNodes() + 1];
+        //nNodes + 1 p/ pular o índice 0, já
+        // que eles indexam a partir do 1 (consistente com alguns outros
+        // métodos)
 
-        Iterator<Integer> iter;
+        Arrays.fill(known, false);
 
-        //Marcamos o vertice de origem
-        visited[origin] = true;
+        LinkedList<Integer> queue = new LinkedList<Integer>();
+        HashMap<Integer, Integer[]> connectedToOrigin = new HashMap<Integer,
+        Integer[]>();
 
-        if (adjList != null) {
-            iter = adjList.get(origin).listIterator();
-        } else {
-            iter = adjMatrix.get(origin).iterator();
-        }
+        //Marcamos o vertice origem e o adicionamos na fila
+        queue.add(origin);        
+        known[origin] = true;   
+        connectedToOrigin.put(origin, new Integer[]{0, 0});
 
-        while (iter.hasNext()) {
-            int w = iter.next();
-            if (!visited[w]) {
-                DFS(w);
+        // Por enquanto só coloquei os blocos no if p/ testar os métodos,
+        // depois vejo melhor o que mais eles têm em comum e como melhor dar
+        // esse "merge"
+
+        if (this.adjMatrix == null) {  // repr por lista
+            while (queue.size() != 0) {
+                int v = queue.remove();
+                int vLvl = connectedToOrigin.get(v)[1];
+
+                Iterator<Integer> iter = adjList.get(v).listIterator();
+
+                while (iter.hasNext()) {
+                    int w = iter.next();
+
+                    if (!known[w]) {
+                        known[w] = true;
+                        connectedToOrigin.put(w, new Integer[]{v,
+                                vLvl + 1});
+                        // movi a linha acima p/ dentro deste loop p/ ter um loop
+                        // a menos
+                        queue.add(w);
+
+                        if (w == goal) {
+                            return connectedToOrigin;
+                        }
+                    }
+                }
+            }
+        } else {  // repr por matriz
+            while (queue.size() != 0) {
+                int v = queue.remove();
+                int vLvl = connectedToOrigin.get(v)[1];
+
+                ArrayList<Integer> mtxVertexRow = adjMatrix.get(v);
+
+                Iterator<Integer> iter = mtxVertexRow.iterator();
+
+                int colCounter = 0;
+
+                while (iter.hasNext()) {
+                    int w = iter.next();
+
+                    if (w == 1) {
+                        if (!known[colCounter]) {
+                            known[colCounter] = true;
+                            connectedToOrigin.put(colCounter, new Integer[]{v,
+                                    vLvl + 1});
+                            queue.add(colCounter);
+
+                            if (colCounter == goal) {
+                                return connectedToOrigin;
+                            }
+                        }
+                    }
+
+                    colCounter++;
+                }
             }
         }
 
-        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
-        for (int i = 0; i < visited.length; i++) {
-            if (visited[i]) connectedToOrigin.add(i);
-        }
         return connectedToOrigin;
     }
-    
+
+    /**
+     * Implementa a busca em largura a partir do vértice de origem
+     * especificado, retornando sua árvore geradora.
+     * @param origin Índice do vértice a ser usado como origem da busca.
+     * @return HashMap cujas chaves são os índices dos nós presentes na
+     *          componente conexa que contém a raiz (incluindo a própria) e
+     *          cujos valores são arrays de inteiros cuja primeira posição
+     *          indica o pai de cada nó na árvore geradora e cuja segunda
+     *          posição indica o nível desse nó.
+     */
+    public HashMap<Integer, Integer[]> BFS(int origin) {
+        return this.BFS(origin, -1);  // índice que certamente não existe
+    }
+
+    /**
+     * Implementa a busca em profundidade para o grafo representado por matriz de adjacencia.
+     * Retorna a componente conexa a qual o vertice de origem pertence.
+     * @param origin Índice do vértice a ser usado como origem da busca.
+     */
+    public HashMap<Integer, Integer[]> DFS(int origin, int goal) {
+        //Array booleano com a marcacao dos vertices
+        //Todos os vertices sao desmarcados a principio
+        Boolean explored[] = new Boolean[this.getNNodes + 1];
+
+        //Enquanto que na BFS a marca de vertice denuncia que este foi descoberto, 
+        //na DFS essa marca representa que o vertice foi explorado, ou seja, que todos 
+        //os seus vizinhos foram descobertos. 
+        //A principio, desmarcamos todos os vertices do grafo.
+        Arrays.fill(explored, false);
+        
+        //Criamos uma pilha com apenas vertice de origem e instanciamos o HashMap de
+        //relacoes pai/filho
+        LinkedList<Integer> stack = new LinkedList<Integer>();
+        stack.add(origin);
+        HashMap<Integer, Integer[]> connectedToOrigin = new HashMap<Integer, Integer[]>();
+        //vertex, [parent, level]
+
+        if (this.adjMatrix == null) {
+            while (!stack.isEmpty()) {
+                int v = stack.removeLast();
+                int vLvl = connectedToOrigin.get(v)[1]; 
+
+                Iterator<Integer> iter = adjList.get(v).listIterator();
+
+                if (!explored[v]) {
+                    explored[v] = true;
+                    
+                    while (iter.hasNext()) {
+                        int u = iter.next();
+
+                        stack.add(v);
+                        
+                        connectedToOrigin.put(u, new Integer[]{v, vLvl + 1});
+
+                        if (u == goal) return connectedToOrigin;
+                    }
+                }                
+            }
+        } else {
+            while (!stack.isEmpty()) {
+                int v = stack.removeLast();
+                int vLvl = connectedToOrigin.get(v)[1]; 
+
+                ArrayList<Integer> mtxVertexRow = adjMatrix.get(v);
+                Iterator<Integer> iter = mtxVertexRow.iterator();
+                int u = iter.next();
+                int colCounter = 0;
+                
+                if (u == 1) {
+                    if (!explored[colCounter]) {
+                        explored[colCounter] = true;
+                        
+                        while (iter.hasNext()) {
+                            stack.add(colCounter);
+                            
+                            connectedToOrigin.put(colCounter, new Integer[]{v, vLvl + 1});
+
+                            if (colCounter == goal) return connectedToOrigin;
+                        }
+                    }     
+                }
+                colCounter++;          
+            }         
+        }
+
+        
+        
+    }
+
+    /**
+     * Obtém a componente conexa do grafo contendo o nó indicado.
+     * @param node Índice do nó.
+     * @return ArrayList ordenada com os índices dos nós da componente.
+     */
+    public ArrayList<Integer> findConnectedComponent(int node) {
+        Set<Integer> elements = this.BFS(node).keySet();
+        ArrayList<Integer> sorted = new ArrayList<Integer>();
+
+        sorted.addAll(elements);
+        Collections.sort(sorted);
+
+        return sorted;
+    }
+
     /**
      * Determina as componentes conexas do grafo.
+     * @return ArrayList de componentes conexas, ordenadas da maior para a
+     *          menor. Os índices dos nós de cada componente estão em ordem
+     *          crescente, conforme saída da função findConnectedComponent().
      */
-    public void findConnectedComponents() {
-        // o retorno não deve ser void, ainda não definimos
-        throw new UnsupportedOperationException("Ainda nao implementado");
+    public ArrayList<ArrayList<Integer>> findConnectedComponents() {
+        ArrayList<ArrayList<Integer>> components =
+                new ArrayList<ArrayList<Integer>>();
+
+        int n = this.getNNodes();
+        int found[] = new int[n + 1];
+        // int queueish[] = IntStream.rangeClosed(0, n).toArray();
+        // & conv to ll?
+
+        Arrays.fill(found, 0);
+
+        for (int i=1; i <= n; i++) {
+            if (found[i] == 0) {
+                ArrayList<Integer> component = this.findConnectedComponent(i);
+                components.add(component);
+
+                for (int node : component) {
+                    found[node] = 1;
+                }  // senão, pula
+            }
+        }
+
+        // Para ordenar ArrayLists de inteiros de acordo com seu comprimento:
+        Comparator<ArrayList<Integer>> onLength = new Comparator<ArrayList<Integer>>() {
+            @Override
+            public int compare(ArrayList<Integer> l1, ArrayList<Integer> l2) {
+                return l1.size() - l2.size();
+            }
+        };
+
+        Collections.sort(components, onLength);
+        Collections.reverse(components);  // ordem decrescente de tamanho
+
+        return components;
     }
 
 }
