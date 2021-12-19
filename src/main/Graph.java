@@ -291,10 +291,7 @@ public class Graph {
         //Array booleano com a marcacao dos vertices
         //Todos os vertices sao desmarcados a principio
         Boolean known[] = new Boolean[this.getNNodes() + 1];
-        // obs: mudei o nome de visited p/ known porque a marcação é na
-        // descoberta (pelo que eu entendi)
-
-        // tb mudei de nNodes elementos p/ nNodes + 1 p/ pular o índice 0, já
+        //nNodes + 1 p/ pular o índice 0, já
         // que eles indexam a partir do 1 (consistente com alguns outros
         // métodos)
 
@@ -304,9 +301,9 @@ public class Graph {
         HashMap<Integer, Integer[]> connectedToOrigin = new HashMap<Integer,
         Integer[]>();
 
-
-        known[origin] = true;   //Marcamos o vertice origem
-        queue.add(origin);        //e o adicionamos na fila
+        //Marcamos o vertice origem e o adicionamos na fila
+        queue.add(origin);        
+        known[origin] = true;   
         connectedToOrigin.put(origin, new Integer[]{0, 0});
 
         // Por enquanto só coloquei os blocos no if p/ testar os métodos,
@@ -395,31 +392,75 @@ public class Graph {
      * Retorna a componente conexa a qual o vertice de origem pertence.
      * @param origin Índice do vértice a ser usado como origem da busca.
      */
-//    public Arraylist<Integer> DFSMatrix(int origin) {
-//        //Array booleano com a marcacao dos vertices
-//        //Todos os vertices sao desmarcados a principio
-//        boolean visited[] = new Boolean[nNodes];
-//        Arrays.fill(visited, false);
-//
-//        //Marcamos o vertice de origem
-//        visited[origin] = true;
-//
-//        ArrayList<Integer> mtxVertexRow = adjMatrix.get(origin);
-//        Iterator<Integer> iter = mtxVertexRow.iterator();
-//
-//        while (iter.hasNext()) {
-//            int w = iter.next();
-//            if (!visited[w]) {
-//                DFSList(w);
-//            }
-//        }
-//
-//        ArrayList<Integer> connectedToOrigin = new ArrayList<Integer>();
-//        for (int i = 0; i < visited.length(); i++) {
-//            if (visited[i] == true) connectedToOrigin.add(i);
-//        }
-//        return connectedToOrigin;
-//    }
+    public HashMap<Integer, Integer[]> DFS(int origin, int goal) {
+        //Array booleano com a marcacao dos vertices
+        //Todos os vertices sao desmarcados a principio
+        Boolean explored[] = new Boolean[this.getNNodes + 1];
+
+        //Enquanto que na BFS a marca de vertice denuncia que este foi descoberto, 
+        //na DFS essa marca representa que o vertice foi explorado, ou seja, que todos 
+        //os seus vizinhos foram descobertos. 
+        //A principio, desmarcamos todos os vertices do grafo.
+        Arrays.fill(explored, false);
+        
+        //Criamos uma pilha com apenas vertice de origem e instanciamos o HashMap de
+        //relacoes pai/filho
+        LinkedList<Integer> stack = new LinkedList<Integer>();
+        stack.add(origin);
+        HashMap<Integer, Integer[]> connectedToOrigin = new HashMap<Integer, Integer[]>();
+        //vertex, [parent, level]
+
+        if (this.adjMatrix == null) {
+            while (!stack.isEmpty()) {
+                int v = stack.removeLast();
+                int vLvl = connectedToOrigin.get(v)[1]; 
+
+                Iterator<Integer> iter = adjList.get(v).listIterator();
+
+                if (!explored[v]) {
+                    explored[v] = true;
+                    
+                    while (iter.hasNext()) {
+                        int u = iter.next();
+
+                        stack.add(v);
+                        
+                        connectedToOrigin.put(u, new Integer[]{v, vLvl + 1});
+
+                        if (u == goal) return connectedToOrigin;
+                    }
+                }                
+            }
+        } else {
+            while (!stack.isEmpty()) {
+                int v = stack.removeLast();
+                int vLvl = connectedToOrigin.get(v)[1]; 
+
+                ArrayList<Integer> mtxVertexRow = adjMatrix.get(v);
+                Iterator<Integer> iter = mtxVertexRow.iterator();
+                int u = iter.next();
+                int colCounter = 0;
+                
+                if (u == 1) {
+                    if (!explored[colCounter]) {
+                        explored[colCounter] = true;
+                        
+                        while (iter.hasNext()) {
+                            stack.add(colCounter);
+                            
+                            connectedToOrigin.put(colCounter, new Integer[]{v, vLvl + 1});
+
+                            if (colCounter == goal) return connectedToOrigin;
+                        }
+                    }     
+                }
+                colCounter++;          
+            }         
+        }
+
+        
+        
+    }
 
     /**
      * Obtém a componente conexa do grafo contendo o nó indicado.
