@@ -4,6 +4,7 @@ import main.Graph;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Main {
@@ -36,15 +37,15 @@ public class Main {
 
 //        String csvHeader = "grafo,memMatriz,memLista," +
 //                "tBFSMatriz,tBFSLista,tDFSMatriz,tDFSLista," +
-//                "pai10_BFS,pai20_BFS,pai30_BFS," +
-//                "pai10_DFS,pai20_DFS,pai30_DFS," +
+//                "pai10BFS,pai20BFS,pai30BFS," +
+//                "pai10DFS,pai20DFS,pai30DFS," +
 //                "dist10_20,dist10_30,dist20_30," +
 //                "nComponentes,compMax,compMin,diam";
 
         String csvHeader = "grafo,memMatriz,tBFSMatriz,tDFSMatriz" +
                 "memLista,tBFSLista,tDFSLista," +
-                "pai10_BFS,pai20_BFS,pai30_BFS," +
-                "pai10_DFS,pai20_DFS,pai30_DFS," +
+                "pai10BFS,pai20BFS,pai30BFS," +
+                "pai10DFS,pai20DFS,pai30DFS," +
                 "dist10_20,dist10_30,dist20_30," +
                 "nComponentes,compMax,compMin,diam";
 
@@ -118,7 +119,23 @@ public class Main {
 
                         }
                     }
-                }
+
+                    // Distâncias entre nós:
+                    csvRow += graph.calcDistance(10, 20) + ",";
+                    csvRow += graph.calcDistance(10, 30) + ",";
+                    csvRow += graph.calcDistance(20, 30) + ",";
+
+                    // Número de componentes conexas:
+                    ArrayList<ArrayList<Integer>> components =
+                            graph.findConnectedComponents();
+
+                    csvRow += components.size() + ",";  //nComponentes
+                    csvRow += components.get(0).size() + ",";  //compMax
+                    csvRow += components.get(components.size()-1).size() +
+                            ",";  //compMin
+                    csvRow += graph.calcDiameter();  // diam
+
+                }  // if (repr == 1); os que só precisam rodar uma vez
 
             }
 
