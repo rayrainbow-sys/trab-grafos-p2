@@ -2,19 +2,11 @@ package main;
 
 // Estruturas de dados etc.:
 import java.lang.reflect.Array;
-import java.util.LinkedList;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.Comparator;
+import java.util.*;
 
 // Para ler o arquivo de entrada:
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class Graph {
@@ -360,7 +352,6 @@ public class Graph {
                             }
                         }
                     }
-
                     colCounter++;
                 }
             }
@@ -391,73 +382,50 @@ public class Graph {
     public HashMap<Integer, Integer[]> DFS(int origin, int goal) {
         //Array booleano com a marcacao dos vertices
         //Todos os vertices sao desmarcados a principio
-        Boolean explored[] = new Boolean[this.getNNodes() + 1];
+        Boolean known[] = new Boolean[this.getNNodes() + 1];
 
-        //Enquanto que na BFS a marca de vertice denuncia que este foi descoberto, 
-        //na DFS essa marca representa que o vertice foi explorado, ou seja, que todos 
-        //os seus vizinhos foram descobertos. 
-        //A principio, desmarcamos todos os vertices do grafo.
-        Arrays.fill(explored, false);
-        
+        //No caso da DFS, a marcacao significa que um vertice foi explorado
+
+        //A principio, desmarcamos todos os vertices do grafo menos o de origem.
+        Arrays.fill(known, false);
+
         //Criamos uma pilha com apenas vertice de origem e instanciamos o HashMap de
-        //relacoes pai/filho
-        LinkedList<Integer> stack = new LinkedList<Integer>();
-        stack.add(origin);
+        //relacoes pai/filho/nivel
+        Stack<Integer> stack = new Stack<Integer>();
+        stack.push(origin);
+
         HashMap<Integer, Integer[]> connectedToOrigin = new HashMap<Integer, Integer[]>();
+        connectedToOrigin.put(origin, new Integer[]{0, 0});
         //vertex, [parent, level]
 
-        if (this.adjMatrix == null) {
-            while (!stack.isEmpty()) {
-                int v = stack.removeLast();
-                int vLvl = connectedToOrigin.get(v)[1]; 
+        while (stack.size() > 0) {
+            int v = stack.pop();
+            int vLvl = connectedToOrigin.get(v)[1];
+            known[v] = true;
 
-                Iterator<Integer> iter = adjList.get(v).listIterator();
+            //Fiz uma copia da lista de adjacencia de v para por os vertices adjacentes
+            //em ordem decrescente sem modificar a lista original.
+            ArrayList<Integer> adjCopia = this.getNeighbors(v);
+            Collections.sort(adjCopia);
+            Collections.reverse(adjCopia);
 
-                if (!explored[v]) {
-                    explored[v] = true;
-                    
-                    while (iter.hasNext()) {
-                        int u = iter.next();
-
-                        stack.add(v);
-                        
-                        connectedToOrigin.put(u, new Integer[]{v, vLvl + 1});
-
-                        if (u == goal) return connectedToOrigin;
+            //Percorrendo os vertices adjacentes de v em ordem decrescente.
+            //O de menor indice fica no topo da pilha e e analisado primeiro.
+            for (int w : adjCopia) {
+                if (!known[w]) {
+                    stack.push(w);
+                    connectedToOrigin.put(w, new Integer[]{v, vLvl + 1});
+                    if (w == goal) {
+                        return connectedToOrigin;
                     }
-                }                
-            }
-        } else {
-            while (!stack.isEmpty()) {
-                int v = stack.removeLast();
-                int vLvl = connectedToOrigin.get(v)[1]; 
-
-                ArrayList<Integer> mtxVertexRow = adjMatrix.get(v);
-                Iterator<Integer> iter = mtxVertexRow.iterator();
-                int u = iter.next();
-                int colCounter = 0;
-                
-                if (u == 1) {
-                    if (!explored[colCounter]) {
-                        explored[colCounter] = true;
-                        
-                        while (iter.hasNext()) {
-                            stack.add(colCounter);
-                            
-                            connectedToOrigin.put(colCounter, new Integer[]{v, vLvl + 1});
-
-                            if (colCounter == goal) return connectedToOrigin;
-                        }
-                    }     
                 }
-                colCounter++;          
-            }         
+            }
         }
         return connectedToOrigin;
     }
 
     public HashMap<Integer, Integer[]> DFS(int origin) {
-        return this.BFS(origin, -1);  // índice que certamente não existe
+        return this.DFS(origin, -1);  // índice que certamente não existe
     }
 
     /**
