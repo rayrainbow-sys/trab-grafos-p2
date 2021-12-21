@@ -243,7 +243,6 @@ class GraphTest {
         dfsTrees.add(dfsTreeL4.DFS(4));
 
         Iterator<HashMap<Integer, Integer[]>> treeIt = dfsTrees.iterator();
-
         while(treeIt.hasNext()) {
             HashMap<Integer, Integer[]> dfsTree = treeIt.next();
 

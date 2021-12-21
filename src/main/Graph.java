@@ -262,7 +262,7 @@ public class Graph {
             }
         }
 
-        return maxDist;  // p/ o IntelliJ não chiar por enquanto
+        return maxDist;
     }
 
     /**
@@ -298,9 +298,61 @@ public class Graph {
         known[origin] = true;   
         connectedToOrigin.put(origin, new Integer[]{0, 0});
 
-        // Por enquanto só coloquei os blocos no if p/ testar os métodos,
-        // depois vejo melhor o que mais eles têm em comum e como melhor dar
-        // esse "merge"
+        // Tentei agrupar os aspectos comuns a ambas as representações para
+        // o código ficar mais enxuto/limpo, mas os testes passaram a falhar;
+        // acho estou esbarrando em problemas de escopo na hora de alterar os
+        // valores (mesmo tendo tentado definir tudo fora dos blocos), e algumas
+        // outras coisas também. Como a versão "mais feia"/com duplicações
+        // funciona, vou deixar assim por enquanto, se sobrar tempo debugamos
+        // isso no final.
+
+//        while (queue.size() != 0) {
+//            int v = queue.remove();
+//            int vLvl = connectedToOrigin.get(v)[1];
+//
+//            Iterator<Integer> iter;
+//
+//            if (this.adjMatrix == null) {  // repr por lista
+//                iter = adjList.get(v).listIterator();
+//            } else {  // repr por matriz
+//                ArrayList<Integer> mtxVertexRow = adjMatrix.get(v);
+//                iter = mtxVertexRow.iterator();
+//            }
+//
+//            while (iter.hasNext()) {
+//                int w = 0;
+//                int include;
+//
+//                if (this.adjMatrix == null) {  // repr por lista
+//                    w = iter.next();
+//                    include = 1;
+//                    // se aparece na lista, então a ligação existe
+//                } else {  // repr por matriz
+//                    include = iter.next();
+//                    // existe a ligação? (entrada 1 ou entrada 0)
+//                    w++; // contador de colunas (índice do nó ligado, ou não)
+//                }
+//
+//                System.out.println("w = " + w);
+//
+//                if ((include != 0) && !known[w]) {
+//                    known[w] = true;
+//                    connectedToOrigin.put(w, new Integer[]{v,
+//                            vLvl + 1});
+//                    // movi a linha acima p/ dentro deste loop p/ ter um loop
+//                    // a menos
+//                    queue.add(w);
+//
+//                    System.out.println("connectedToOrigin " +
+//                            "keys: " + connectedToOrigin.keySet());
+//
+//                    if (w == goal) {
+//                        return connectedToOrigin;
+//                    }
+//                }
+//
+//            }
+//        }
 
         if (this.adjMatrix == null) {  // repr por lista
             while (queue.size() != 0) {
@@ -375,9 +427,18 @@ public class Graph {
     }
 
     /**
-     * Implementa a busca em profundidade para o grafo representado por matriz de adjacencia.
-     * Retorna a componente conexa a qual o vertice de origem pertence.
+     * Implementa a busca em profundidade a partir do vértice de origem
+     * especificado, retornando sua árvore geradora. Interrompe a BFS ao
+     * chegar ao vértice-alvo fornecido, caso este exista e esteja ligado
+     * à origem por algum caminho.
      * @param origin Índice do vértice a ser usado como origem da busca.
+     * @param goal Índice do vértice buscado.
+     * @return HashMap cujas chaves são os índices dos nós presentes na
+     *          árvore geradora da BFS interrompida ao chegar ao nó-alvo
+     *          (caso chegue). Suas chaves são os índices dos nós (incluindo a
+     *          própria raiz e o alvo) e seus valores são arrays de inteiros
+     *          cuja primeira posição indica o pai de cada nó na árvore
+     *          geradora e cuja segunda posição indica o nível desse nó.
      */
     public HashMap<Integer, Integer[]> DFS(int origin, int goal) {
         //Array booleano com a marcacao dos vertices
@@ -424,6 +485,16 @@ public class Graph {
         return connectedToOrigin;
     }
 
+    /**
+     * Implementa a busca em profundidade a partir do vértice de origem
+     * especificado, retornando sua árvore geradora.
+     * @param origin Índice do vértice a ser usado como origem da busca.
+     * @return HashMap cujas chaves são os índices dos nós presentes na
+     *          componente conexa que contém a raiz (incluindo a própria) e
+     *          cujos valores são arrays de inteiros cuja primeira posição
+     *          indica o pai de cada nó na árvore geradora e cuja segunda
+     *          posição indica o nível desse nó.
+     */
     public HashMap<Integer, Integer[]> DFS(int origin) {
         return this.DFS(origin, -1);  // índice que certamente não existe
     }
