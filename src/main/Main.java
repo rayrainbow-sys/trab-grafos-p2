@@ -45,7 +45,7 @@ public class Main {
 //                "dist10_20,dist10_30,dist20_30," +
 //                "nComponentes,compMax,compMin,diam";
 
-        String csvHeader = "grafo,memMatriz,tBFSMatriz,tDFSMatriz" +
+        String csvHeader = "grafo,memMatriz,tBFSMatriz,tDFSMatriz," +
                 "memLista,tBFSLista,tDFSLista," +
                 "pai10BFS,pai20BFS,pai30BFS," +
                 "pai10DFS,pai20DFS,pai30DFS," +
