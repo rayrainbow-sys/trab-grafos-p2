@@ -649,4 +649,13 @@ public class Graph {
         return components;
     }
 
+    /**
+     * Imprime um relatório sobre o grafo num arquivo de texto.
+     * @param outfile Arquivo de saída, incluindo caminho absoluto ou a
+     *                partir da raiz do diretório de trabalho.
+     */
+    public void printReport (String outfile) {
+        
+    }
+
 }
