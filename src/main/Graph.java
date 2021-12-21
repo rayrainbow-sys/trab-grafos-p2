@@ -443,12 +443,12 @@ public class Graph {
     public HashMap<Integer, Integer[]> DFS(int origin, int goal) {
         //Array booleano com a marcacao dos vertices
         //Todos os vertices sao desmarcados a principio
-        Boolean known[] = new Boolean[this.getNNodes() + 1];
+        Boolean explored[] = new Boolean[this.getNNodes() + 1];
 
         //No caso da DFS, a marcacao significa que um vertice foi explorado
 
         //A principio, desmarcamos todos os vertices do grafo menos o de origem.
-        Arrays.fill(known, false);
+        Arrays.fill(explored, false);
 
         //Criamos uma pilha com apenas vertice de origem e instanciamos o HashMap de
         //relacoes pai/filho/nivel
@@ -458,14 +458,106 @@ public class Graph {
         HashMap<Integer, Integer[]> connectedToOrigin = new HashMap<Integer, Integer[]>();
         connectedToOrigin.put(origin, new Integer[]{0, 0});
         //vertex, [parent, level]
+//
+//        // (ver comentários no método da BFS sobre o if análogo)
+//
+////        int prevVisit = -1;
+//
+//        if (this.adjMatrix == null) {  // repr por lista
+//            while (stack.size() > 0) {
+//                int v = stack.pop();
+//
+//                if (v == goal) {
+//                    return connectedToOrigin;
+//                }
+//
+//                int vLvl = connectedToOrigin.get(v)[1];  // ?
+//
+//                if (explored[v]) {
+//                    continue;  // não revisita nós já marcados (explorados)
+//                } // else implícito
+//
+//                explored[v] = true;
+//
+////                if (prevVisit > -1) {
+////                    int prevLvl = connectedToOrigin.get(prevVisit)[1];
+////
+////                    connectedToOrigin.put(v, new Integer[]{prevVisit,
+////                            prevLvl + 1});
+////                } else {  // raiz
+////                    connectedToOrigin.put(v, new Integer[]{0, 0});
+////                }
+//
+//                Iterator<Integer> iter = adjList.get(v).listIterator();
+//
+//                while (iter.hasNext()) {
+//                    int w = iter.next();
+//                    stack.push(w);
+//
+////                    if (connectedToOrigin.get(w) == null) {
+//                    if (!explored[w]) {
+//                        connectedToOrigin.put(w, new Integer[]{v,
+//                                vLvl + 1});  // não é aqui?
+//                    }
+//
+////                    connectedToOrigin.put(w, new Integer[]{v,
+////                                vLvl + 1});  // não é aqui?
+////                    if (w == goal) {  // não é aqui?
+////                        return connectedToOrigin;
+////                    }
+//                }
+//
+////                prevVisit = v;
+//            }
+//        } else {  // repr por matriz -- !! INCOMPLETO !!
+//            while (stack.size() > 0) {
+//                int v = stack.pop();
+//                int vLvl = connectedToOrigin.get(v)[1];  // ?
+//
+//                if (explored[v]) {
+//                    continue;  // não revisita nós já marcados (explorados)
+//                } // else implícito
+//
+//                explored[v] = true;
+//
+//                ArrayList<Integer> mtxVertexRow = adjMatrix.get(v);
+//
+//                Iterator<Integer> iter = mtxVertexRow.iterator();
+//
+//                int colCounter = 0;
+//
+//                while (iter.hasNext()) {
+//                    int w = iter.next();
+//
+//                    if (w == 1) {
+//                        stack.push(w);
+//                        connectedToOrigin.put(colCounter, new Integer[]{v,
+//                                vLvl + 1}); // ?
+//
+//                        if (colCounter == goal) {
+//                            return connectedToOrigin;
+//                        } // ?
+//
+//                    }
+//
+//                    colCounter++;
+//                }
+//            }
+//        }
+
+        // O que está abaixo passa nos testes, mas está usando o getNeighbors
+        // (ver comentário na doc dessa função), e tenho a impressão de que o
+        // critério de só colocar na pilha se não houver sido explorado não
+        // está de acordo com o slide -- o que é curioso, porque parece gerar
+        // a árvore certa mesmo assim...
 
         while (stack.size() > 0) {
             int v = stack.pop();
             int vLvl = connectedToOrigin.get(v)[1];
-            known[v] = true;
+            explored[v] = true;
 
-            //Fiz uma copia da lista de adjacencia de v para por os vertices adjacentes
-            //em ordem decrescente sem modificar a lista original.
+//            Fiz uma copia da lista de adjacencia de v para por os vertices adjacentes
+//            em ordem decrescente sem modificar a lista original.
             ArrayList<Integer> adjCopia = this.getNeighbors(v);
             Collections.sort(adjCopia);
             Collections.reverse(adjCopia);
@@ -473,7 +565,7 @@ public class Graph {
             //Percorrendo os vertices adjacentes de v em ordem decrescente.
             //O de menor indice fica no topo da pilha e e analisado primeiro.
             for (int w : adjCopia) {
-                if (!known[w]) {
+                if (!explored[w]) {
                     stack.push(w);
                     connectedToOrigin.put(w, new Integer[]{v, vLvl + 1});
                     if (w == goal) {
@@ -482,6 +574,7 @@ public class Graph {
                 }
             }
         }
+
         return connectedToOrigin;
     }
 

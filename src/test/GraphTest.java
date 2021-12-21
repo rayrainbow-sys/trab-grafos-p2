@@ -255,7 +255,7 @@ class GraphTest {
 
             // Testando níveis:
             assertEquals(0, dfsTree.get(4)[1]);  // raiz tem nível 0
-            assertEquals(1,dfsTree.get(6)[1]);
+            assertEquals(1, dfsTree.get(6)[1]);
             assertEquals(2, dfsTree.get(3)[1]);
             assertEquals(3, dfsTree.get(8)[1]);
 
