@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.util.stream.IntStream;
 
 public class Graph {
+    private final String inputFile;
     private int nNodes;
     private int nEdges;
     private ArrayList<ArrayList<Integer>> adjMatrix;
@@ -31,6 +32,7 @@ public class Graph {
         }  // else
 
         try {
+            inputFile = filepath;
             File inputFile = new File(filepath);
             Scanner inputReader = new Scanner(inputFile);
 
@@ -111,6 +113,15 @@ public class Graph {
         return nEdges;
     }
 
+    /**
+     * Retorna o nome do arquivo de texto que deu origem ao grafo.
+     * @return Nome do arquivo (com caminho absoluto ou a partir da raiz do
+     * diretório de trabalho, conforme tenha sido fornecido).
+     */
+    public String getInputFile() {
+        return inputFile;
+    }
+    
     /**
      * Retorna os vizinhos de um nó num formato unificado tanto para a representação por
      * matriz quanto por lista, para possibilitar a composição com outros métodos.
@@ -655,7 +666,7 @@ public class Graph {
      *                partir da raiz do diretório de trabalho.
      */
     public void printReport (String outfile) {
-        
+
     }
 
 }
