@@ -2,4 +2,5 @@ doc/
 out/
 src/main/input
 .idea/codeStyles/codeStyleConfig.xml
+src/test/reports
 

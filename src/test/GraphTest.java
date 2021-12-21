@@ -333,4 +333,11 @@ class GraphTest {
         }
     }
 
+    @Test
+    @DisplayName("Impressão de relatório - verif. manual")
+    void printReport() {
+        String outDir = "out/"
+        pdfGraph.printReport();
+    }
+
 }

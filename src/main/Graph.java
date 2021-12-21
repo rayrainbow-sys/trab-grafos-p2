@@ -121,7 +121,7 @@ public class Graph {
     public String getInputFile() {
         return inputFile;
     }
-    
+
     /**
      * Retorna os vizinhos de um nó num formato unificado tanto para a representação por
      * matriz quanto por lista, para possibilitar a composição com outros métodos.
