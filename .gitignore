@@ -1,6 +1,6 @@
 doc/
 out/
-src/main/input
+case-studies/
 .idea/codeStyles/codeStyleConfig.xml
 src/test/reports
 reports/
