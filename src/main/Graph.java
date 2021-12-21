@@ -1,16 +1,20 @@
 package main;
 
 // Estruturas de dados etc.:
-import java.lang.reflect.Array;
 import java.util.*;
 
-// Para ler o arquivo de entrada:
+// Leitura e escrita de arquivos:
 import java.io.File;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.FileNotFoundException;
-import java.util.stream.IntStream;
 
 public class Graph {
-    private final String inputFile;
+    /**
+     * Nome do arquivo de origem, sem caminho e sem extensão.
+     */
+    private String inputFile;
     private int nNodes;
     private int nEdges;
     private ArrayList<ArrayList<Integer>> adjMatrix;
@@ -32,7 +36,9 @@ public class Graph {
         }  // else
 
         try {
-            inputFile = filepath;
+            inputFile = filepath.substring(filepath.lastIndexOf("/") + 1);
+            inputFile = inputFile.substring(0, inputFile.lastIndexOf("."));
+
             File inputFile = new File(filepath);
             Scanner inputReader = new Scanner(inputFile);
 
@@ -663,10 +669,16 @@ public class Graph {
     /**
      * Imprime um relatório sobre o grafo num arquivo de texto.
      * @param outfile Arquivo de saída, incluindo caminho absoluto ou a
-     *                partir da raiz do diretório de trabalho.
+     *                partir da raiz do diretório de trabalho. Será
+     *                sobrescrito caso já exista.
      */
-    public void printReport (String outfile) {
+    public void printReport (String outfile) throws IOException {
+        BufferedWriter br =
+                new BufferedWriter(new FileWriter(outfile, false));
+        // cf. https://stackoverflow.com/a/52581499
 
+        br.write("aaaaaaaaaa");
+        br.close();
     }
 
 }

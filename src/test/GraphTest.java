@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 //import main;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -334,10 +335,23 @@ class GraphTest {
     }
 
     @Test
+    @DisplayName("Nome do arquivo de origem (sem caminho)")
+    void getInputFile() {
+        assertEquals("teste3", disconnected15.getInputFile());
+        assertEquals("bfstree_root6", bfsTreeM6.getInputFile());
+    }
+
+    @Test
     @DisplayName("Impressão de relatório - verif. manual")
-    void printReport() {
-        String outDir = "out/"
-        pdfGraph.printReport();
+    void printReport() throws IOException {
+        String outDir = "src/test/reports/";
+        main.Graph[] cases = {pdfGraph, disconnected6};
+
+        for (main.Graph graph : cases) {
+            graph.printReport(outDir + graph.getInputFile() + ".txt");
+        }
+//        pdfGraph.printReport(pdfGraph.getInputFilePath());
+//        disconnected6.printReport(disconnected6.getInputFilePath());
     }
 
 }
