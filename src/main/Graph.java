@@ -673,51 +673,51 @@ public class Graph {
      *                sobrescrito caso já exista.
      */
     public void printReport (String outfile) throws IOException {
-        BufferedWriter br =
+        BufferedWriter bw =
                 new BufferedWriter(new FileWriter(outfile, false));
         // cf. https://stackoverflow.com/a/52581499
 
-        br.write("Relatorio sobre o grafo " + this.getInputFile());
-        br.write("\n(Representacao interna: ");
+        bw.write("Relatorio sobre o grafo " + this.getInputFile());
+        bw.write("\n(Representacao interna: ");
 
         if (this.adjMatrix == null) {
-            br.write("lista ");
+            bw.write("lista ");
         } else {
-            br.write("matriz ");
+            bw.write("matriz ");
         }
 
-        br.write("de adjacências)");
+        bw.write("de adjacências)");
 
-        br.write("\n\nNumero de nos: " + this.getNNodes());
-        br.write("\nNumero de arestas: " + this.getNEdges());
+        bw.write("\n\nNumero de nos: " + this.getNNodes());
+        bw.write("\nNumero de arestas: " + this.getNEdges());
 
         HashMap<String, Double> data = this.getDegreeOverview();
 
-        br.write("\nGrau maximo: " + data.get("max"));
-        br.write("\nGrau minimo: " + data.get("min"));
-        br.write("\nGrau medio: " + data.get("mean"));
-        br.write("\nMediana de grau: " + data.get("med"));
+        bw.write("\nGrau maximo: " + data.get("max"));
+        bw.write("\nGrau minimo: " + data.get("min"));
+        bw.write("\nGrau medio: " + data.get("mean"));
+        bw.write("\nMediana de grau: " + data.get("med"));
 
-        br.write("\n\nComponentes conexas");
+        bw.write("\n\nComponentes conexas");
 
         ArrayList<ArrayList<Integer>> components =
                 this.findConnectedComponents();
 
         int qty = components.size();
 
-        br.write("\nQuantidade: " + qty);
-        br.write("\nFormato: [tamanho] nó1 nó2...");
+        bw.write("\nQuantidade: " + qty);
+        bw.write("\nFormato: [tamanho] nó1 nó2...");
 
         for (ArrayList<Integer> component : components) {
             int len = component.size();
-            br.write("\n[" + len + "]");
+            bw.write("\n[" + len + "]");
 
             for (Integer node : component) {
-                br.write(" " + node);
+                bw.write(" " + node);
             }
         }
 
-        br.close();
+        bw.close();
     }
 
 }
