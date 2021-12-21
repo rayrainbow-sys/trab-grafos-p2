@@ -677,7 +677,37 @@ public class Graph {
                 new BufferedWriter(new FileWriter(outfile, false));
         // cf. https://stackoverflow.com/a/52581499
 
-        br.write("aaaaaaaaaa");
+        br.write("Relatorio sobre o grafo " + this.getInputFile());
+
+        br.write("\n\nNumero de nos: " + this.getNNodes());
+        br.write("\nNumero de arestas: " + this.getNEdges());
+
+        HashMap<String, Double> data = this.getDegreeOverview();
+
+        br.write("\nGrau maximo: " + data.get("max"));
+        br.write("\nGrau minimo: " + data.get("min"));
+        br.write("\nGrau medio: " + data.get("mean"));
+        br.write("\nMediana de grau: " + data.get("med"));
+
+        br.write("\n\nComponentes conexas");
+
+        ArrayList<ArrayList<Integer>> components =
+                this.findConnectedComponents();
+
+        int qty = components.size();
+
+        br.write("\nQuantidade: " + qty);
+        br.write("\nFormato: [tamanho] nó1 nó2...");
+
+        for (ArrayList<Integer> component : components) {
+            int len = component.size();
+            br.write("\n[" + len + "]");
+
+            for (Integer node : component) {
+                br.write(" " + node);
+            }
+        }
+
         br.close();
     }
 
