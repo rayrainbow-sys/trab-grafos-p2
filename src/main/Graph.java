@@ -678,6 +678,15 @@ public class Graph {
         // cf. https://stackoverflow.com/a/52581499
 
         br.write("Relatorio sobre o grafo " + this.getInputFile());
+        br.write("\n(Representacao interna: ");
+
+        if (this.adjMatrix == null) {
+            br.write("lista ");
+        } else {
+            br.write("matriz ");
+        }
+
+        br.write("de adjacências)");
 
         br.write("\n\nNumero de nos: " + this.getNNodes());
         br.write("\nNumero de arestas: " + this.getNEdges());
