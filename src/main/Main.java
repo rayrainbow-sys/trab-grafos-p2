@@ -11,9 +11,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-//        Graph[] caseStudiesMtx = new Graph[nCases];
-//        Graph[] caseStudiesList = new Graph[nCases];
-
         Graph graph;
 
         for (int i=1; i <= nCases; i ++) {
@@ -21,23 +18,27 @@ public class Main {
                 try {
                     String in = inputDir + "grafo_" + i + ".txt";
 
-                    System.out.println("\nLendo arquivo " + in);
+                    System.out.print("\nLendo arquivo " + in + " (repr.: ");
+
+                    if (repr == 0) {
+                        System.out.print("matriz");
+                    } else {
+                        System.out.print("lista");
+                    }
+
+                    System.out.print(")\n");
 
                     graph = new Graph(in, repr);
-//                    caseStudiesMtx[i - 1] = graphM;
-//
-//                    Graph graphL = new Graph(in, 1);
-//                    caseStudiesList[i - 1] = graphL;
 
                 } catch (InstantiationException exc) {
                     System.err.println("Falha na leitura do arquivo do estudo de " +
                             "caso " + i +"; abortando execução");
                     System.exit(1);
                 }
+
             }
 
         }
 
-        System.out.println(outDir);
     }
 }
