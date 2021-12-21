@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Main {
+    // Definindo algumas constantes:
     private static final int nCases = 3; //6;
     // pulando os que estouram a heap por enqto
+    private static final int nRuns = 2; //1000;
+    // pouco, para testar
     private static final String inputDir = "case-studies/";
     private static final String outDir = "reports/";
 
@@ -91,8 +94,31 @@ public class Main {
                 csvRow += "-1,";  // pulando o uso de memória por enqto,
                 // precisamos pesquisar a melhor forma de fazer
 
-                // tBFS
-                // tDFS
+                // tBFS ou tDFS:
+                for (int meth=0; meth <= 1; meth++) {  // Jesse, let's cook
+                    long avg = 0;
+                    long start, end, elapsed;
+
+                    for (int r=0; r < nRuns; r++) {
+                        int origin = r % graph.getNNodes();
+                        // por simplicidade
+
+                        start = System.nanoTime();
+
+                        if (meth == 0) {
+                            graph.BFS(origin);
+                        } else {
+                            graph.DFS(origin);
+                        }
+
+                        end = System.nanoTime();
+                        elapsed = end - start;
+                        avg += elapsed;
+                    }
+
+                    avg /= nRuns;
+                    csvRow += avg + ",";
+                }
 
                 // As medidas seguintes não dependem da forma de
                 // representação, então só precisam ser executadas uma vez
