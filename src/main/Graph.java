@@ -17,7 +17,7 @@ public class Graph {
     private String inputFile;
     private int nNodes;
     private int nEdges;
-    private ArrayList<ArrayList<Integer>> adjMatrix;
+    private ArrayList<ArrayList<Boolean>> adjMatrix;
     private ArrayList<LinkedList<Integer>> adjList;
 
     /**
@@ -47,14 +47,14 @@ public class Graph {
 
             if (reprChoice == 0) {
                 this.adjList = null;
-                this.adjMatrix = new ArrayList<ArrayList<Integer>>();
+                this.adjMatrix = new ArrayList<ArrayList<Boolean>>();
 
                 // Inicializa matriz de adjacência com zeros
                 for (int i=0; i <= this.getNNodes(); i++) {
-                    ArrayList<Integer> row = new ArrayList<Integer>();
+                    ArrayList<Boolean> row = new ArrayList<Boolean>();
 
                     for (int j = 0; j <= this.getNNodes(); j++) {
-                        row.add(0);
+                        row.add(false);
                     }
 
                     this.adjMatrix.add(row);
@@ -88,8 +88,8 @@ public class Graph {
                 int node2 = Integer.parseInt(nodeStrings[1]);
 
                 if (reprChoice == 0) {
-                    this.adjMatrix.get(node1).set(node2, 1);
-                    this.adjMatrix.get(node2).set(node1, 1);
+                    this.adjMatrix.get(node1).set(node2, true);
+                    this.adjMatrix.get(node2).set(node1, true);
                 } else {
                     this.adjList.get(node1).add(node2);
                     this.adjList.get(node2).add(node1);
@@ -147,10 +147,10 @@ public class Graph {
 
         if (this.adjList == null) {
             neighbors = new ArrayList<Integer>();
-            ArrayList<Integer> mtxRow = adjMatrix.get(node);
+            ArrayList<Boolean> mtxRow = adjMatrix.get(node);
 
             for (int i=1; i<=nNodes; i++) {
-                if (mtxRow.get(i) == 1) {
+                if (mtxRow.get(i)) {
                     neighbors.add(i);
                 }
             }
@@ -400,16 +400,16 @@ public class Graph {
                 int v = queue.remove();
                 int vLvl = connectedToOrigin.get(v)[1];
 
-                ArrayList<Integer> mtxVertexRow = adjMatrix.get(v);
+                ArrayList<Boolean> mtxVertexRow = adjMatrix.get(v);
 
-                Iterator<Integer> iter = mtxVertexRow.iterator();
+                Iterator<Boolean> iter = mtxVertexRow.iterator();
 
                 int colCounter = 0;
 
                 while (iter.hasNext()) {
-                    int w = iter.next();
+                    Boolean w = iter.next();
 
-                    if (w == 1) {
+                    if (w) {
                         if (!known[colCounter]) {
                             known[colCounter] = true;
                             connectedToOrigin.put(colCounter, new Integer[]{v,

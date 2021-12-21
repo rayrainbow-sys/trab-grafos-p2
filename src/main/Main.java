@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class Main {
     // Definindo algumas constantes:
-    private static final int nCases = 3; //6;
+    private static final int nCases = 6;
     // pulando os que estouram a heap por enqto
     private static final int nRuns = 2; //1000;
     // pouco, para testar
