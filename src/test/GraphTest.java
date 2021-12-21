@@ -239,15 +239,15 @@ class GraphTest {
         ArrayList<HashMap<Integer, Integer[]>> dfsTrees =
                 new ArrayList<HashMap<Integer, Integer[]>>();
 
-        dfsTrees.add(dfsTreeM4.BFS(4));
-        dfsTrees.add(dfsTreeL4.BFS(4));
+        dfsTrees.add(dfsTreeM4.DFS(4));
+        dfsTrees.add(dfsTreeL4.DFS(4));
 
         Iterator<HashMap<Integer, Integer[]>> treeIt = dfsTrees.iterator();
 
         while(treeIt.hasNext()) {
             HashMap<Integer, Integer[]> dfsTree = treeIt.next();
 
-            for (int i = 1; i <= dfsTreeM4.getNNodes(); i++) {
+            for (int i = 1; i <= dfsTreeL4.getNNodes(); i++) {
                 // (ambas têm a mesma qtd de nós, estou usando o mesmo getter
                 // para simplificar)
                 assertTrue(dfsTree.containsKey(i), "Faltou " + i);
@@ -255,15 +255,20 @@ class GraphTest {
             }
 
             // Testando níveis:
-            assertEquals(dfsTree.get(4)[1], 0);  // raiz tem nível 0
-            assertEquals(dfsTree.get(6)[1], 1);
-            assertEquals(dfsTree.get(3)[1], 2);
-            assertEquals(dfsTree.get(8)[1], 3);
+            assertEquals(0, dfsTree.get(4)[1]);  // raiz tem nível 0
+            assertEquals(1,dfsTree.get(6)[1]);
+            assertEquals(2, dfsTree.get(3)[1]);
+            assertEquals(3, dfsTree.get(8)[1]);
 
             // Testando pais:
-            assertEquals(dfsTree.get(1)[0], 4);
-            assertEquals(dfsTree.get(5)[0], 6);
-            assertEquals(dfsTree.get(2)[0], 3);
+            assertEquals(0, dfsTree.get(4)[0]);
+            assertEquals(4, dfsTree.get(1)[0]);
+            assertEquals(6, dfsTree.get(5)[0]);
+            assertEquals(3, dfsTree.get(2)[0]);
+            assertEquals(3, dfsTree.get(8)[0]);
+            assertEquals(5, dfsTree.get(7)[0]);
+            assertEquals(1, dfsTree.get(3)[0]);
+            assertEquals(4, dfsTree.get(6)[0]);
 
         }
     }
