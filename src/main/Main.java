@@ -16,13 +16,27 @@ public class Main {
     private static final String inputDir = "case-studies/";
     private static final String outDir = "reports/";
 
-    public String stdReportFilename(Graph graph) {
+    public static String stdReportFilename(Graph graph) {
         return outDir + graph.getInputFile() + ".txt";
+    }
+
+    public static void printMemUsage(Runtime runtime) {
+        System.out.println("Memoria disponivel: " + runtime.maxMemory());
+        System.out.println("Memoria em uso: " + runtime.totalMemory());
+        System.out.println("Memoria livre: " + runtime.freeMemory());
+        System.out.println("% em uso:" + ((double) runtime.totalMemory()) /  ((double) runtime.maxMemory()));
+        System.out.println("% livre:" + ((double) runtime.freeMemory()) /  ((double) runtime.maxMemory()));
     }
 
     public static void main(String[] args) {
         Graph graph;
         BufferedWriter csvWriter;
+        Runtime runtime = Runtime.getRuntime();
+        // p/ medir o uso de memória
+        // cf https://stackoverflow.com/a/74763
+
+        printMemUsage(runtime);
+        // ué
 
         try {
             csvWriter =
@@ -37,13 +51,6 @@ public class Main {
             // execução é encerrada)
             System.exit(1);
         }
-
-//        String csvHeader = "grafo,memMatriz,memLista," +
-//                "tBFSMatriz,tBFSLista,tDFSMatriz,tDFSLista," +
-//                "pai10BFS,pai20BFS,pai30BFS," +
-//                "pai10DFS,pai20DFS,pai30DFS," +
-//                "dist10_20,dist10_30,dist20_30," +
-//                "nComponentes,compMax,compMin,diam";
 
         String csvHeader = "grafo,memMatriz,tBFSMatriz,tDFSMatriz," +
                 "memLista,tBFSLista,tDFSLista," +
