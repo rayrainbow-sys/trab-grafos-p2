@@ -242,7 +242,7 @@ public class Graph {
     public int calcDiameter() {
         int n = this.getNNodes();
         int maxDist = 0;
-//        Integer[][] distMtx = new Integer[n + 1][n + 1];
+
         // neste caso não precisaríamos pular o índice zero, porque só
         // queremos saber _qual_ a "maior menor" distância, e não a que par
         // de vértices ela está associada, mas usei n + 1 mesmo assim por
@@ -265,8 +265,6 @@ public class Graph {
                 *  segunda condição se a primeira for falsa). */
                 return -1;
             }
-
-//            Arrays.fill(distMtx[i], 0);  // precisa? Ou pode deixar null?
 
             for (int j=i+1; j <= n; j++) {
                 // se j = i, a dist é 0 mesmo, então pode pular
@@ -317,59 +315,10 @@ public class Graph {
 
         // Tentei agrupar os aspectos comuns a ambas as representações para
         // o código ficar mais enxuto/limpo, mas os testes passaram a falhar;
-        // acho estou esbarrando em problemas de escopo na hora de alterar os
+        // acho que estou esbarrando em problemas de escopo na hora de alterar os
         // valores (mesmo tendo tentado definir tudo fora dos blocos), e algumas
         // outras coisas também. Como a versão "mais feia"/com duplicações
-        // funciona, vou deixar assim por enquanto, se sobrar tempo debugamos
-        // isso no final.
-
-//        while (queue.size() != 0) {
-//            int v = queue.remove();
-//            int vLvl = connectedToOrigin.get(v)[1];
-//
-//            Iterator<Integer> iter;
-//
-//            if (this.adjMatrix == null) {  // repr por lista
-//                iter = adjList.get(v).listIterator();
-//            } else {  // repr por matriz
-//                ArrayList<Integer> mtxVertexRow = adjMatrix.get(v);
-//                iter = mtxVertexRow.iterator();
-//            }
-//
-//            while (iter.hasNext()) {
-//                int w = 0;
-//                int include;
-//
-//                if (this.adjMatrix == null) {  // repr por lista
-//                    w = iter.next();
-//                    include = 1;
-//                    // se aparece na lista, então a ligação existe
-//                } else {  // repr por matriz
-//                    include = iter.next();
-//                    // existe a ligação? (entrada 1 ou entrada 0)
-//                    w++; // contador de colunas (índice do nó ligado, ou não)
-//                }
-//
-//                System.out.println("w = " + w);
-//
-//                if ((include != 0) && !known[w]) {
-//                    known[w] = true;
-//                    connectedToOrigin.put(w, new Integer[]{v,
-//                            vLvl + 1});
-//                    // movi a linha acima p/ dentro deste loop p/ ter um loop
-//                    // a menos
-//                    queue.add(w);
-//
-//                    System.out.println("connectedToOrigin " +
-//                            "keys: " + connectedToOrigin.keySet());
-//
-//                    if (w == goal) {
-//                        return connectedToOrigin;
-//                    }
-//                }
-//
-//            }
-//        }
+        // funciona, optamos por deixar assim a versao final.
 
         if (this.adjMatrix == null) {  // repr por lista
             while (queue.size() != 0) {
@@ -385,8 +334,7 @@ public class Graph {
                         known[w] = true;
                         connectedToOrigin.put(w, new Integer[]{v,
                                 vLvl + 1});
-                        // movi a linha acima p/ dentro deste loop p/ ter um loop
-                        // a menos
+
                         queue.add(w);
 
                         if (w == goal) {
@@ -481,14 +429,14 @@ public class Graph {
             int vLvl = connectedToOrigin.get(v)[1];
             explored[v] = true;
 
-//            Fiz uma copia da lista de adjacencia de v para por os vertices adjacentes
-//            em ordem decrescente sem modificar a lista original.
+            //Fiz uma cópia da lista de adjacencia de v para por os vertices adjacentes
+            //em ordem decrescente sem modificar a lista original.
             ArrayList<Integer> adjCopia = this.getNeighbors(v);
             Collections.sort(adjCopia);
             Collections.reverse(adjCopia);
 
             //Percorrendo os vertices adjacentes de v em ordem decrescente.
-            //O de menor indice fica no topo da pilha e e analisado primeiro.
+            //O de menor indice fica no topo da pilha e é analisado primeiro.
             for (int w : adjCopia) {
                 if (!explored[w]) {
                     stack.push(w);
@@ -544,8 +492,6 @@ public class Graph {
 
         int n = this.getNNodes();
         int found[] = new int[n + 1];
-        // int queueish[] = IntStream.rangeClosed(0, n).toArray();
-        // & conv to ll?
 
         Arrays.fill(found, 0);
 
@@ -584,6 +530,7 @@ public class Graph {
         BufferedWriter bw =
                 new BufferedWriter(new FileWriter(outfile, false));
         // cf. https://stackoverflow.com/a/52581499
+        // Para criar o arquivo caso não exista, e sobrescrevê-lo caso exista
 
         bw.write("Relatorio sobre o grafo " + this.getInputFile());
         bw.write("\n(Representacao interna: ");

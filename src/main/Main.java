@@ -180,7 +180,6 @@ public class Main {
                                 // conexa da origem
                                 csvRow += "N/A,";
                             }
-
                         }
                     }
 
