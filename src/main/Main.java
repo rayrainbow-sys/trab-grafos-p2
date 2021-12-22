@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class Main {
     // Definindo algumas constantes:
-    private static final int nCases = 6;
+    private static final int nCases = 3; //6;
     // pulando os que estouram a heap por enqto
     private static final int nRuns = 2; //1000;
     // pouco, para testar
@@ -20,23 +20,46 @@ public class Main {
         return outDir + graph.getInputFile() + ".txt";
     }
 
+    /**
+     * Memória de fato sendo utilizada pela JVM. Ver https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory
+     * @param runtime
+     * @return
+     */
+    public static long usedMemory(Runtime runtime) {
+        return runtime.totalMemory() - runtime.freeMemory();
+    }
+
+    /**
+     * Memória de fato disponível para a JVM. Ver https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory
+     * @param runtime
+     * @return
+     */
+    public static long actualFreeMemory(Runtime runtime) {
+        return runtime.maxMemory() - usedMemory(runtime);
+    }
+
     public static void printMemUsage(Runtime runtime) {
-        System.out.println("Memoria disponivel: " + runtime.maxMemory());
-        System.out.println("Memoria em uso: " + runtime.totalMemory());
-        System.out.println("Memoria livre: " + runtime.freeMemory());
-        System.out.println("% em uso:" + ((double) runtime.totalMemory()) /  ((double) runtime.maxMemory()));
-        System.out.println("% livre:" + ((double) runtime.freeMemory()) /  ((double) runtime.maxMemory()));
+        long max = runtime.maxMemory();
+        long used = usedMemory(runtime);
+        long freeActual = actualFreeMemory(runtime);
+
+        System.out.println("Memoria disponivel p/ a JVM: " + max / 1024);
+        System.out.println("Memoria em uso pela JVM: " + used / 1024);
+        System.out.println("Memoria livre: " + freeActual / 1024);
+        System.out.println("% em uso:" + ((double) used) /  ((double) max));
+        System.out.println("% livre:" + ((double) freeActual) /  ((double) max));
+        System.out.println("(Obs: todos os valores absolutos em MB.)");
     }
 
     public static void main(String[] args) {
         Graph graph;
         BufferedWriter csvWriter;
+        long currentMem;
         Runtime runtime = Runtime.getRuntime();
         // p/ medir o uso de memória
         // cf https://stackoverflow.com/a/74763
 
         printMemUsage(runtime);
-        // ué
 
         try {
             csvWriter =
@@ -88,6 +111,11 @@ public class Main {
                     System.out.print(")\n");
 
                     graph = new Graph(in, repr);
+                    System.gc();
+                    // tentando forçar o coletor de lixo a apagar o anterior da
+                    // memória
+                    // (pelo uso de memória antes disso, parecia que não estava
+                    // liberando o espaço de imediato)
 
                 } catch (InstantiationException exc) {
                     System.err.println("Falha na leitura do arquivo do estudo de " +
@@ -98,8 +126,11 @@ public class Main {
                     System.exit(1);
                 }
 
-                csvRow += "-1,";  // pulando o uso de memória por enqto,
-                // precisamos pesquisar a melhor forma de fazer
+                printMemUsage(runtime);
+
+                currentMem = usedMemory(runtime) / 1024;
+
+                csvRow += currentMem + ",";
 
                 // tBFS ou tDFS:
                 for (int meth=0; meth <= 1; meth++) {  // Jesse, let's cook
