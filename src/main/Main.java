@@ -9,10 +9,8 @@ import java.util.HashMap;
 
 public class Main {
     // Definindo algumas constantes:
-    private static final int nCases = 3; //6;
-    // pulando os que estouram a heap por enqto
-    private static final int nRuns = 2; //1000;
-    // pouco, para testar
+    private static final int nCases = 6;
+    private static final int nRuns = 1000;
     private static final String inputDir = "case-studies/";
     private static final String outDir = "reports/";
 
@@ -97,6 +95,16 @@ public class Main {
             String csvRow = i + ",";  // grafo
 
             for (int repr=0; repr <= 1; repr++) {
+                if (i > 3 && repr == 0) {
+                    // pulando os casos que estouram a heap (por enquanto?)
+                    csvRow += "-2,-2,-2";
+                    // sinalizando que não foram feitas as medidas de tempo
+                    // e uso de memória específicas para a representação por
+                    // matriz nesses casos
+                    // (usando -2 para evitar confundir com o -1 retornado
+                    // por alguns métodos da classe Graph)
+                    continue;
+                }
                 try {
                     String in = inputDir + "grafo_" + i + ".txt";
 
