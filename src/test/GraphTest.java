@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
-//import main;
+import graphs.Graph;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,23 +12,23 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GraphTest {
-    private static main.Graph pdfGraph;
-    private static main.Graph connected7;
-    private static main.Graph disconnected6;
-    private static main.Graph disconnected15;
+    private static Graph pdfGraph;
+    private static Graph connected7;
+    private static Graph disconnected6;
+    private static Graph disconnected15;
 
-    private static main.Graph bfsTreeM6;  // raiz: nó 6
-    private static main.Graph bfsTreeL6;
+    private static Graph bfsTreeM6;  // raiz: nó 6
+    private static Graph bfsTreeL6;
 
-    private static main.Graph dfsTreeM4;  // raiz: nó 4
-    private static main.Graph dfsTreeL4;
+    private static Graph dfsTreeM4;  // raiz: nó 4
+    private static Graph dfsTreeL4;
 
     private static final double eps = 1e-6;  // p/ comparações de floats
 
     @BeforeAll
     static void setUp() {
         try {
-            pdfGraph = new main.Graph("src/test/input/pdf.txt", 1);
+            pdfGraph = new Graph("src/test/input/pdf.txt", 1);
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo do pdf");
             // Como lidar com isso nos testes?
@@ -38,33 +38,33 @@ class GraphTest {
         }
 
         try {
-            connected7 = new main.Graph("src/test/input/teste1.txt", 0);
+            connected7 = new Graph("src/test/input/teste1.txt", 0);
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo manual 1");
         }
 
         try {
-            disconnected6 = new main.Graph("src/test/input/teste2.txt", 0);
+            disconnected6 = new Graph("src/test/input/teste2.txt", 0);
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo manual 2");
         }
 
         try {
-            disconnected15 = new main.Graph("src/test/input/teste3.txt", 1);
+            disconnected15 = new Graph("src/test/input/teste3.txt", 1);
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo manual 3");
         }
 
         try {
-            bfsTreeM6 = new main.Graph("src/test/input/bfstree_root6.txt", 0);
-            bfsTreeL6 = new main.Graph("src/test/input/bfstree_root6.txt", 1);
+            bfsTreeM6 = new Graph("src/test/input/bfstree_root6.txt", 0);
+            bfsTreeL6 = new Graph("src/test/input/bfstree_root6.txt", 1);
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo da BFS (slide)");
         }
 
         try {
-            dfsTreeM4 = new main.Graph("src/test/input/dfstree_root4.txt", 0);
-            dfsTreeL4 = new main.Graph("src/test/input/dfstree_root4.txt", 1);
+            dfsTreeM4 = new Graph("src/test/input/dfstree_root4.txt", 0);
+            dfsTreeL4 = new Graph("src/test/input/dfstree_root4.txt", 1);
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo da DFS (slide)");
         }
@@ -359,9 +359,9 @@ class GraphTest {
     @DisplayName("Impressão de relatório - verif. manual")
     void printReport() throws IOException {
         String outDir = "src/test/reports/";
-        main.Graph[] cases = {pdfGraph, disconnected6};
+        Graph[] cases = {pdfGraph, disconnected6};
 
-        for (main.Graph graph : cases) {
+        for (Graph graph : cases) {
             graph.printReport(outDir + graph.getInputFile() + ".txt");
         }
 //        pdfGraph.printReport(pdfGraph.getInputFilePath());

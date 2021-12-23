@@ -1,4 +1,4 @@
-package main;
+package graphs;
 
 // Estruturas de dados etc.:
 import java.lang.reflect.Array;

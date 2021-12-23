@@ -1,5 +1,6 @@
-package main;
-import main.Graph;
+package main; //casestudies;
+// (não aceitou, e não achei que valia a pena parar para resolver isso agora :P)
+import graphs.Graph;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -11,7 +12,7 @@ public class Main {
     // Definindo algumas constantes:
     private static final int nCases = 6;
     private static final int nRuns = 1000;
-    private static final String inputDir = "case-study-graphs/";
+    private static final String inputDir = "case-studies/";
     private static final String outDir = "reports/";
 
     public static String stdReportFilename(Graph graph) {

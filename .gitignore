@@ -1,6 +1,6 @@
 doc/
 out/
-case-study-graphs/
+case-studies/
 .idea/codeStyles/codeStyleConfig.xml
 src/test/reports
 reports/
