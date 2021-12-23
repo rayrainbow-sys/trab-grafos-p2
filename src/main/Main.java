@@ -11,7 +11,7 @@ public class Main {
     // Definindo algumas constantes:
     private static final int nCases = 6;
     private static final int nRuns = 1000;
-    private static final String inputDir = "case-studies/";
+    private static final String inputDir = "case-study-graphs/";
     private static final String outDir = "reports/";
 
     public static String stdReportFilename(Graph graph) {
