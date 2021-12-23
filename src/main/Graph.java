@@ -11,6 +11,8 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Graph {
     /**
@@ -229,7 +231,7 @@ public class Graph {
         Integer[] node2Value = spanningTree.get(node2);
 
         if (node2Value == null) {
-            return -1;  // não conectado; grau seria infinito
+            return -1;  // não conectado; distância seria infinita
         }
 
         return node2Value[1];  // nível na árvore geradora
@@ -276,41 +278,76 @@ public class Graph {
 
     /**
      * Calcula e retorna o diâmetro do grafo, definido como a maior distância entre dois
-     * vértices.
-     * @return Diâmetro do grafo; se o grafo for desconexo, retorna o maior diâmetro dentre
-     * as suas componentes.
+     * vértices. Implementa um algoritmo aproximativo pseudoaleatório para
+     * grafos maiores do que um threshold de tamanho definido pelo usuário.
+     *
+     * @param nMax Se o número n de nós for maior do que nMax, é feita uma
+     *             aproximação comparando apenas as distâncias calculadas a
+     *             partir de log_2(n) vértices, escolhidos ao acoso. (Se nMax
+     *             for -1, então o algoritmo aproximativo não será usado para
+     *             nenhum tamanho de grafo. Entretanto, é mais simples chamar o
+     *             método calcDiameter sem nenhum parâmetro para isso.)
+     * @return Diâmetro do grafo; se o grafo for desconexo, retorna o maior
+     *             diâmetro dentre as suas componentes.
      */
-    public int calcDiameter() {
+    public int calcDiameter(int nMax) {
         int n = this.getNNodes();
         int maxDist = 0;
-        //int nMAX = 1000000;
 
-        // neste caso não precisaríamos pular o índice zero, porque só
-        // queremos saber _qual_ a "maior menor" distância, e não a que par
-        // de vértices ela está associada, mas usei n + 1 mesmo assim por
-        // clareza, só para lidar sempre com os mesmos índices
+        if (nMax == -1) {
+            nMax = n + 1;
+            // parâmetro opcional (fizemos overload do método); garantindo
+            // que nenhum valor de n vá atender ao critério para uso do
+            // algoritmo aproximativo
+        }
 
-        /*if (n > nMAX) {
-            Integer[] chosenOnes = this.getRandomSample();
-            Collections.sort(chosenOnes);
+        int nIndices;
 
-            for (int i = 1; i <= chosenOnes)
-        }*/
+        if (n > nMax) {
+            nIndices = (int) Math.floor(Math.log(n) / Math.log(2));
+            // usa log_2(n) índices, cf. sugestão do professor
+        } else {
+            nIndices = n;
+        }
 
-        for (int i=1; i <= n; i++) {
-            HashMap<Integer, Integer[]> bfsTree = this.BFS(i);
-            int j = i + 1;
+        ArrayList<Integer> indices = new ArrayList<Integer>();
 
-            // se j = i, a dist é 0 mesmo, então pode pular
-            // se j < i, já verificou em iteração anterior
-            // (análogo a estar considerando apenas as entradas acima da
-            // diag principal numa matriz de distâncias entre nós)
+        for (int i=0; i<n; i++) {
+            indices.add(i + 1);
+        }
+
+        // (tentei usar o IntStream.rangeClosed, mas List (que ele retorna) não
+        // implementa um método set, aí o shuffle não funciona. Achei mais
+        // rápido fazer esse loop primitivo rapidão do que estender a classe
+        // implementando esse método :P)
+
+        Collections.shuffle(indices);  // p/ randomizar sem repetição
+
+        for (int i=0; i < nIndices; i++) {
+            int idx = indices.get(i);
+            HashMap<Integer, Integer[]> bfsTree = this.BFS(idx);
+
+            int j;
+
+            if (n <= nMax) {
+                j = idx + 1;
+                // se j = i, a dist é 0 mesmo, então pode pular
+                // se j < i, já verificou em iteração anterior
+                // (análogo a estar considerando apenas as entradas acima da
+                // diag principal numa matriz de distâncias entre nós)
+            } else {
+                j = 1;
+                // no caso do algoritmo aproximativo, não vamos pular nenhum
+                // índice, porque já estamos considerando apenas um subset
+                // dos nós como origem
+            }
+
             while (j <= n) {
+                Integer[] jTuple = bfsTree.get(j);
+
                 //Se a componente conexa do vértice então analisado não contém
                 //o vértice até o qual estamos tentando calcular o menor caminho,
                 //pulamos para o próximo.
-
-                Integer[] jTuple = bfsTree.get(j);
 
                 if (jTuple == null) {
                     j++;
@@ -324,6 +361,16 @@ public class Graph {
             }
         }
         return maxDist;
+    }
+
+    /**
+     * Calcula e retorna o diâmetro do grafo, definido como a maior distância entre dois
+     * vértices.
+     * @return Diâmetro do grafo; se o grafo for desconexo, retorna o maior diâmetro dentre
+     * as suas componentes.
+     */
+    public int calcDiameter() {
+        return calcDiameter(-1);
     }
 
     /**

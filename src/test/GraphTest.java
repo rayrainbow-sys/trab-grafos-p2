@@ -290,6 +290,18 @@ class GraphTest {
         assertEquals(3, disconnected6.calcDiameter());
         assertEquals(4, disconnected15.calcDiameter());
         assertEquals(5, connected7.calcDiameter());
+
+        // No caso do algoritmo aproximativo, não temos como saber se está
+        // certo, até por ser (pseudo)aleatório, mas ao menos dá para testar se
+        // roda:
+
+        System.out.println(
+                "Real (15 nós): " +
+                disconnected15.calcDiameter() +
+                "\nAproximado (10 nós): " +
+                disconnected15.calcDiameter(10));
+
+        // às vezes dá 3, às vezes dá 4 (o certo); parece razoável
     }
 
     @Test
