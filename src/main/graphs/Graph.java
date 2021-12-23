@@ -14,6 +14,10 @@ import java.io.FileNotFoundException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Classe que implementa as representações e algoritmos de grafos solicitados
+ * nas especificações o trabalho.
+ */
 public class Graph {
     /**
      * Nome do arquivo de origem, sem caminho e sem extensão.
@@ -260,45 +264,6 @@ public class Graph {
         }
 
         return node2Value[1];  // nível na árvore geradora
-    }
-
-    /**
-     * Seleciona uma amostra randomizada, a partir de um dado grafo, que terá uma quantidade
-     * k de vértices.
-     * @return
-     */
-    public Integer[] getRandomSample() {
-        int k = (int) (Math.log(this.getNNodes()) / Math.log(2)); //log_2 do número de vértices do grafo
-        ArrayList<Integer> allVertices = new ArrayList<Integer>();
-        Integer[] randomSample = (Integer[]) Array.newInstance(Integer.class.getComponentType(), k);
-        Random r = new Random();
-
-        for (int i = 1; i <= this.getNNodes(); i++) {
-            allVertices.add(i);
-        }
-
-        int kPicked = 0, j = 0, kLeft = this.getNNodes();
-
-        /* Queremos que, em cada posição do array de amostra randomizada, a probabilidade
-        * de um vértice do total de vértices ser selecionado seja o número de vértices que
-        * ainda faltam para completar nossa amostra sobre o número de vértices que ainda
-        * não foram escolhidos. Por exemplo, se queremos escolher 3 vértices aleatórios
-        * de um total de 15 vértices, a probabilidade de um vértice qualquer ser escolhido
-        * para a primeira posição (índice 0) deve ser 3/15. Na próxima posição (índice 1)
-        * um vértice que ainda não foi escolhido teria 2/14 de probabilidade e assim
-        * por diante. */
-        while (k > 0) {
-            //Escolhe um número aleatório entre 0 e kLeft;
-            int rand = r.nextInt(kLeft);
-
-            if (rand < k) {
-                randomSample[kPicked++] = allVertices.get(j);
-                k--;
-            }
-            kLeft--;
-            j++;
-        }
-        return randomSample;
     }
 
     /**

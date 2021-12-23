@@ -8,10 +8,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Programa que usamos para gerar os dados requeridos para os estudos de caso
+ * . (Este programa não seria necessário para um usuário da classe Graph; até
+ * por conta disso, ele está menos detalhadamente documentado.)
+ */
 public class Main {
     // Definindo algumas constantes:
     private static final int nCases = 6;
-    private static final int nRuns = 1000;
+    private static int nRuns = 1000;
+    // retiramos o final para reduzir para 4, 5, 6
     private static final String inputDir = "case-studies/";
     private static final String outDir = "reports/";
 
@@ -142,6 +148,12 @@ public class Main {
                 csvRow += currentMem + ",";
 
                 // tBFS ou tDFS:
+                if (i >= 4) {
+                    nRuns = 10;
+                    // na velocidade em que estava, íamos estourar o prazo só
+                    // esperando o algoritmo rodar...
+                }
+
                 for (int meth=0; meth <= 1; meth++) {  // Jesse, let's cook
                     long avg = 0;
                     long start, end, elapsed;
