@@ -19,9 +19,27 @@ public class Graph {
      * Nome do arquivo de origem, sem caminho e sem extensão.
      */
     private String inputFile;
+
+    /**
+     * Número de nós do grafo.
+     */
     private int nNodes;
+
+    /**
+     * Número de arestas do grafo.
+     */
     private int nEdges;
+
+    /**
+     * Representação do grafo por matriz de adjacência (será null caso o
+     * usuário opte pela representação por lista).
+     */
     private ArrayList<ArrayList<Boolean>> adjMatrix;
+
+    /**
+     * Representação do grafo por lista de adjacência (será null caso o
+     * usuário opte pela representação por lista).
+     */
     private ArrayList<LinkedList<Integer>> adjList;
 
     /**
@@ -125,6 +143,7 @@ public class Graph {
 
     /**
      * Retorna o nome do arquivo de texto que deu origem ao grafo.
+     *
      * @return Nome do arquivo (com caminho absoluto ou a partir da raiz do
      * diretório de trabalho, conforme tenha sido fornecido).
      */
@@ -136,12 +155,18 @@ public class Graph {
      * Retorna os vizinhos de um nó num formato unificado tanto para a representação por
      * matriz quanto por lista, para possibilitar a composição com outros métodos.
      *
-     * (Chegamos a discutir sobre as ineficiências introduzidas por essa abstração, por
-     * exigir uma etapa extra de conversão. Só depois percebemos que, como era pedido que
-     * medíssemos o tempo separadamente para cara forma de representação, o uso deste método
-     * seria incompatível com o trabalho, pois, justamente, eliminaria essas diferenças. Como
-     * o método já estava pronto e testado, deixamos aqui caso viesse a ser necessário, mas
-     * não o estamos usando na BFS e DFS.)
+     * Discutimos sobre potenciais ineficiências introduzidas por essa
+     * abstração, que pode acabar exigindo uma etapa extra de conversão, e
+     * ficamos em dúvida se o uso desse método na BFS e DFS seria
+     * incompatível com o trabalho, já que foi pedido que medíssemos o tempo
+     * separadamente para cada forma de representação. (Por um lado, este
+     * método poderia ter um efeito "uniformizador"; por outro lado, ele
+     * próprio é executado de forma diferente para cada forma de
+     * representação, então pode ser que a diferença se mantivesse.)
+     *
+     * Optamos por não usá-lo na BFS, ainda que isso deixasse o código mais
+     * bifurcado e "menos abstrato", mas a forma como conseguimos implementar
+     * a DFS com geração de árvore acabou envolvendo o uso dele.
      *
      * @param node Índice do nó.
      * @return ArrayList de inteiros, com os índices dos vizinhos do nó.

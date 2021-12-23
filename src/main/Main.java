@@ -91,7 +91,7 @@ public class Main {
             System.exit(1);
         }
 
-        for (int i=1; i <= 3; i ++) {
+        for (int i=1; i <= nCases; i ++) {
             String csvRow = i + ",";  // grafo
 
             for (int repr=0; repr <= 1; repr++) {
@@ -204,7 +204,7 @@ public class Main {
                     csvRow += components.get(0).size() + ",";  //compMax
                     csvRow += components.get(components.size()-1).size() +
                             ",";  //compMin
-                    csvRow += graph.calcDiameter();  // diam
+                    csvRow += graph.calcDiameter(10000);  // diam
 
                 }  // if (repr == 1); os que só precisam rodar uma vez
 
