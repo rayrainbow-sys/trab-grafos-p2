@@ -509,6 +509,49 @@ public class Graph {
     }
 
     /**
+     * Implementa a busca em largura a partir do vértice de origem
+     * especificado, retornando sua árvore geradora e imprimindo-a para o
+     * arquivo de saída fornecido. (O formato de impressão é explicado no
+     * próprio arquivo.)
+     * @param origin Índice do vértice a ser usado como origem da busca.
+     * @param outfile Nome do arquivo de saída, com extensão e caminho
+     *                (absoluto ou relativo a partir da raiz do diretório de
+     *                trabalho).
+     * @return HashMap cujas chaves são os índices dos nós presentes na
+     *          componente conexa que contém a raiz (incluindo a própria) e
+     *          cujos valores são arrays de inteiros cuja primeira posição
+     *          indica o pai de cada nó na árvore geradora e cuja segunda
+     *          posição indica o nível desse nó.
+     */
+    public HashMap<Integer, Integer[]> BFS(int origin, String outfile) throws IOException {
+        HashMap<Integer, Integer[]> bfsTree = this.BFS(origin, -1);
+
+        BufferedWriter bw =
+                new BufferedWriter(new FileWriter(outfile, false));
+        // cf. https://stackoverflow.com/a/52581499
+        // Para criar o arquivo caso não exista, e sobrescrevê-lo caso exista
+
+        bw.write("Arvore geradora da BFS no grafo " + this.getInputFile());
+        bw.write(" com origem no vertice " + origin + "\n");
+
+        bw.write("\nNumero de nos: " + bfsTree.size());
+
+        bw.write("\n\nFormato das linhas seguintes: <vértice> <pai> <nível>\n");
+
+        for (Map.Entry<Integer, Integer[]> pair : bfsTree.entrySet()) {
+            Integer node = pair.getKey();
+            Integer parent = pair.getValue()[0];
+            Integer level = pair.getValue()[1];
+
+            bw.write(node + " " + parent + " " + level + "\n");
+        }
+
+        bw.close();
+
+        return bfsTree;
+    }
+
+    /**
      * Implementa a busca em profundidade a partir do vértice de origem
      * especificado, retornando sua árvore geradora. Interrompe a BFS ao
      * chegar ao vértice-alvo fornecido, caso este exista e esteja ligado
@@ -580,6 +623,49 @@ public class Graph {
      */
     public HashMap<Integer, Integer[]> DFS(int origin) {
         return this.DFS(origin, -1);  // índice que certamente não existe
+    }
+
+    /**
+     * Implementa a busca em profundidade a partir do vértice de origem
+     * especificado, retornando sua árvore geradora e imprimindo-a para o
+     * arquivo de saída fornecido. (O formato de impressão é explicado no
+     * próprio arquivo.)
+     * @param origin Índice do vértice a ser usado como origem da busca.
+     * @param outfile Nome do arquivo de saída, com extensão e caminho
+     *                (absoluto ou relativo a partir da raiz do diretório de
+     *                trabalho).
+     * @return HashMap cujas chaves são os índices dos nós presentes na
+     *          componente conexa que contém a raiz (incluindo a própria) e
+     *          cujos valores são arrays de inteiros cuja primeira posição
+     *          indica o pai de cada nó na árvore geradora e cuja segunda
+     *          posição indica o nível desse nó.
+     */
+    public HashMap<Integer, Integer[]> DFS(int origin, String outfile) throws IOException {
+        HashMap<Integer, Integer[]> dfsTree = this.DFS(origin, -1);
+
+        BufferedWriter bw =
+                new BufferedWriter(new FileWriter(outfile, false));
+        // cf. https://stackoverflow.com/a/52581499
+        // Para criar o arquivo caso não exista, e sobrescrevê-lo caso exista
+
+        bw.write("Arvore geradora da DFS no grafo " + this.getInputFile());
+        bw.write(" com origem no vertice " + origin + "\n");
+
+        bw.write("\nNumero de nos: " + dfsTree.size());
+
+        bw.write("\n\nFormato das linhas seguintes: <vértice> <pai> <nível>\n");
+
+        for (Map.Entry<Integer, Integer[]> pair : dfsTree.entrySet()) {
+            Integer node = pair.getKey();
+            Integer parent = pair.getValue()[0];
+            Integer level = pair.getValue()[1];
+
+            bw.write(node + " " + parent + " " + level + "\n");
+        }
+
+        bw.close();
+
+        return dfsTree;
     }
 
     /**
