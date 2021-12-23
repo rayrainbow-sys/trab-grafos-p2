@@ -309,12 +309,15 @@ public class Graph {
                 //Se a componente conexa do vértice então analisado não contém
                 //o vértice até o qual estamos tentando calcular o menor caminho,
                 //pulamos para o próximo.
-                if (!bfsTree.containsKey(j)) {
+
+                Integer[] jTuple = bfsTree.get(j);
+
+                if (jTuple == null) {
                     j++;
                 } else {
 
-                    if (bfsTree.get(j)[1] > maxDist) {
-                        maxDist = bfsTree.get(j)[1];
+                    if (jTuple[1] > maxDist) {
+                        maxDist = jTuple[1];
                     }
                 }
                 j++;
