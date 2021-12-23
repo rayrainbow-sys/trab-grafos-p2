@@ -287,7 +287,9 @@ class GraphTest {
     @DisplayName("Diâmetro do grafo")
     void calcDiameter() {
         assertEquals(2, pdfGraph.calcDiameter());
-        assertEquals(-1, disconnected6.calcDiameter());
+        assertEquals(3, disconnected6.calcDiameter());
+        assertEquals(4, disconnected15.calcDiameter());
+        assertEquals(5, connected7.calcDiameter());
     }
 
     @Test

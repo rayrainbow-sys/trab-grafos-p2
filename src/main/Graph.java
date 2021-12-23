@@ -1,7 +1,9 @@
 package main;
 
 // Estruturas de dados etc.:
+import java.lang.reflect.Array;
 import java.util.*;
+import java.lang.Math;
 
 // Leitura e escrita de arquivos:
 import java.io.File;
@@ -234,49 +236,102 @@ public class Graph {
     }
 
     /**
+     * Seleciona uma amostra randomizada, a partir de um dado grafo, que terá uma quantidade
+     * k de vértices.
+     * @return
+     */
+    public Integer[] getRandomSample() {
+        int k = (int) (Math.log(this.getNNodes()) / Math.log(2)); //log_2 do número de vértices do grafo
+        ArrayList<Integer> allVertices = new ArrayList<Integer>();
+        Integer[] randomSample = (Integer[]) Array.newInstance(Integer.class.getComponentType(), k);
+        Random r = new Random();
+
+        for (int i = 1; i <= this.getNNodes(); i++) {
+            allVertices.add(i);
+        }
+
+        int kPicked = 0, j = 0, kLeft = this.getNNodes();
+
+        /* Queremos que, em cada posição do array de amostra randomizada, a probabilidade
+        * de um vértice do total de vértices ser selecionado seja o número de vértices que
+        * ainda faltam para completar nossa amostra sobre o número de vértices que ainda
+        * não foram escolhidos. Por exemplo, se queremos escolher 3 vértices aleatórios
+        * de um total de 15 vértices, a probabilidade de um vértice qualquer ser escolhido
+        * para a primeira posição (índice 0) deve ser 3/15. Na próxima posição (índice 1)
+        * um vértice que ainda não foi escolhido teria 2/14 de probabilidade e assim
+        * por diante. */
+        while (k > 0) {
+            //Escolhe um número aleatório entre 0 e kLeft;
+            int rand = r.nextInt(kLeft);
+
+            if (rand < k) {
+                randomSample[kPicked++] = allVertices.get(j);
+                k--;
+            }
+            kLeft--;
+            j++;
+        }
+        return randomSample;
+    }
+
+    /**
      * Calcula e retorna o diâmetro do grafo, definido como a maior distância entre dois
      * vértices.
-     * @return Diâmetro do grafo; retorna -1 se este for infinito (grafo
-     *          desconexo).
+     * @return Diâmetro do grafo; se o grafo for desconexo, retorna o maior diâmetro dentre
+     * as suas componentes.
      */
     public int calcDiameter() {
         int n = this.getNNodes();
         int maxDist = 0;
+        //int nMAX = 1000000;
 
         // neste caso não precisaríamos pular o índice zero, porque só
         // queremos saber _qual_ a "maior menor" distância, e não a que par
         // de vértices ela está associada, mas usei n + 1 mesmo assim por
         // clareza, só para lidar sempre com os mesmos índices
 
+        /*if (n > nMAX) {
+            Integer[] chosenOnes = this.getRandomSample();
+            Collections.sort(chosenOnes);
+
+            for (int i = 1; i <= chosenOnes)
+        }*/
+
         for (int i=1; i <= n; i++) {
             HashMap<Integer, Integer[]> bfsTree = this.BFS(i);
+            int j = i + 1;
 
-            if (i == 1 && bfsTree.size() < n) {
-                /* O grafo é conexo sse o primeiro nó está conectado a todos:
-                * se o primeiro nó está conectado a todos, existe um caminho
-                * de qualquer nó a qualquer nó passando pelo primeiro, logo,
-                * o grafo é conexo; se o grafo é conexo, em particular e por
-                * definição, a componente conexa que contém o primeiro nó
-                * contém todos os demais.
-                *
-                * Imaginei que seria menos custoso evitar a verificação do
-                * tamanho de bfsTree após a primeira iteração (o Java usa
-                * lazy evaluation para essas expressões lógicas; não chega na
-                *  segunda condição se a primeira for falsa). */
-                return -1;
-            }
+            /* O grafo é conexo se o primeiro nó está conectado a todos:
+             * se o primeiro nó está conectado a todos, existe um caminho
+             * de qualquer nó a qualquer nó passando pelo primeiro, logo,
+             * o grafo é conexo; se o grafo é conexo, em particular e por
+             * definição, a componente conexa que contém o primeiro nó
+             * contém todos os demais.
+             *
+             * Imaginei que seria menos custoso evitar a verificação do
+             * tamanho de bfsTree após a primeira iteração (o Java usa
+             * lazy evaluation para essas expressões lógicas; não chega na
+             *  segunda condição se a primeira for falsa). */
 
-            for (int j=i+1; j <= n; j++) {
-                // se j = i, a dist é 0 mesmo, então pode pular
-                // se j < i, já verificou em iteração anterior
-                // (análogo a estar considerando apenas as entradas acima da
-                // diag principal numa matriz de distâncias entre nós)
-                if (bfsTree.get(j)[1] > maxDist) {
-                    maxDist = bfsTree.get(j)[1];
+            // se j = i, a dist é 0 mesmo, então pode pular
+            // se j < i, já verificou em iteração anterior
+            // (análogo a estar considerando apenas as entradas acima da
+            // diag principal numa matriz de distâncias entre nós)
+            while (j <= n) {
+                //Se a componente conexa do vértice então analisado não contém
+                //o vértice até o qual estamos tentando calcular o menor caminho,
+                //pulamos para o próximo.
+                if (!bfsTree.containsKey(j)) {
+                    j++;
+                } else {
+
+                    if (bfsTree.get(j)[1] > maxDist) {
+                        maxDist = bfsTree.get(j)[1];
+                    }
                 }
+                j++;
             }
         }
-
         return maxDist;
     }
 
@@ -373,7 +428,6 @@ public class Graph {
                 }
             }
         }
-
         return connectedToOrigin;
     }
 
