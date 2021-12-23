@@ -1,5 +1,5 @@
 Primeira parte do trabalho de implementação da disciplina de Teoria dos Grafos 
-(2021.2), feito pelas alunas Rayssa Almeida (@rayrainbow-sys) e Eduarda 
+(2021.2), feito pelas alunas Rayssa Almeida (@rayrainbow-sys) e Eduarda
 Ferreira (@ferreira-mev).
 
 A biblioteca solicitada, para representação e manipulação de grafos, é o 
@@ -17,3 +17,9 @@ para os professores e o monitor.
 
 O diretório `src/test` contém testes unitários do JUnit 5 para os métodos da 
 classe `Graph`. A implementação atual passa em todos os testes incluídos.
+
+Vale acrescentar a observação de que a dupla decidiu se desafiar a fazer o 
+trabalho em Java pelo interesse em aprender a linguagem, tendo tido pouca 
+(Eduarda) ou nenhuma (Rayssa) experiência prévia com ela, então agradecemos 
+feedback sobre qualquer coisa que fuja às convenções, boas práticas ou 
+formas mais eficientes de uso do Java.
