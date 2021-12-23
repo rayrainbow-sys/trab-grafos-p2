@@ -301,18 +301,6 @@ public class Graph {
             HashMap<Integer, Integer[]> bfsTree = this.BFS(i);
             int j = i + 1;
 
-            /* O grafo é conexo se o primeiro nó está conectado a todos:
-             * se o primeiro nó está conectado a todos, existe um caminho
-             * de qualquer nó a qualquer nó passando pelo primeiro, logo,
-             * o grafo é conexo; se o grafo é conexo, em particular e por
-             * definição, a componente conexa que contém o primeiro nó
-             * contém todos os demais.
-             *
-             * Imaginei que seria menos custoso evitar a verificação do
-             * tamanho de bfsTree após a primeira iteração (o Java usa
-             * lazy evaluation para essas expressões lógicas; não chega na
-             *  segunda condição se a primeira for falsa). */
-
             // se j = i, a dist é 0 mesmo, então pode pular
             // se j < i, já verificou em iteração anterior
             // (análogo a estar considerando apenas as entradas acima da

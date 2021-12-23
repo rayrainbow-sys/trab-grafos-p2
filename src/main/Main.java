@@ -91,7 +91,7 @@ public class Main {
             System.exit(1);
         }
 
-        for (int i=1; i <= nCases; i ++) {
+        for (int i=1; i <= 3; i ++) {
             String csvRow = i + ",";  // grafo
 
             for (int repr=0; repr <= 1; repr++) {
