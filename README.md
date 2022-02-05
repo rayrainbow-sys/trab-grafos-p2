@@ -1,6 +1,9 @@
-Primeira parte do trabalho de implementação da disciplina de Teoria dos Grafos 
-(2021.2), feito pelas alunas Rayssa Almeida (@rayrainbow-sys) e Eduarda
-Ferreira (@ferreira-mev).
+Segunda parte do trabalho de implementação da disciplina de Teoria dos Grafos 
+(2021.2), feito por Rayssa Almeida (@rayrainbow-sys) e, ainda, se aproveitando das 
+importantissimas contribuições de Eduarda Ferreira (@ferreira-mev), que está embarcada 
+em outras aventuras nessa metade do semestre. 
+
+##daqui pra baixo tudo deverá ser modificado
 
 A biblioteca solicitada, para representação e manipulação de grafos, é o 
 pacote `graphs`, atualmente composto apenas pela classe `Graph`, disponível 
