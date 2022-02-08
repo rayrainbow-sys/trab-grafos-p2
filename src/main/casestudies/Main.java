@@ -1,4 +1,4 @@
-package main; //casestudies;
+package casestudies; //casestudies;
 // (não aceitou, e não achei que valia a pena parar para resolver isso agora :P)
 import graphs.Graph;
 
@@ -98,7 +98,7 @@ public class Main {
             System.exit(1);
         }
 
-        for (int i=1; i <= nCases; i ++) {
+        /*for (int i=1; i <= nCases; i ++) {
             String csvRow = i + ",";  // grafo
 
             for (int repr=0; repr <= 1; repr++) {
@@ -115,17 +115,9 @@ public class Main {
                 try {
                     String in = inputDir + "grafo_" + i + ".txt";
 
-                    System.out.print("\nLendo arquivo " + in + " (repr.: ");
+                    System.out.print("\nLendo arquivo " + in + " (repr.: lista de adjacências com pesos)\n";
 
-                    if (repr == 0) {
-                        System.out.print("matriz");
-                    } else {
-                        System.out.print("lista");
-                    }
-
-                    System.out.print(")\n");
-
-                    graph = new Graph(in, repr);
+                    graph = new Graph(in);
                     System.gc();
                     // tentando forçar o coletor de lixo a apagar o anterior da
                     // memória
@@ -231,7 +223,7 @@ public class Main {
                 System.exit(1);
             }
 
-        }
+        }*/
 
         try {
             csvWriter.close();
