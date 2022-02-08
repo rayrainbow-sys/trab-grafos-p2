@@ -47,6 +47,11 @@ public class Graph {
     private ArrayList<LinkedList<Integer>> adjList;
 
     /**
+     * Representação dos custos das adjacências do grafo.
+     */
+    private ArrayList<LinkedHashMap<Integer, Double>> adjCost;
+
+    /**
      * Construtor da classe Graph.
      * @param filepath Arquivo de entrada no formato especificado. O caminho pode
      *                 ser especificado de forma absoluta ou relativa, a partir da
@@ -70,6 +75,16 @@ public class Graph {
 
             this.nNodes = Integer.parseInt(inputReader.nextLine());
             this.nEdges = 0;  // acumulador
+
+            this.adjCost = new ArrayList<LinkedHashMap<Integer, Double>>();
+
+            for (int i = 0; i <= this.getNNodes(); i++) {
+                LinkedHashMap<Integer, Double> costList = new LinkedHashMap<Integer, Double>();
+                
+                costList.put(i, 0.0);
+                
+                this.adjCost.add(costList);
+            }
 
             if (reprChoice == 0) {
                 this.adjList = null;
@@ -112,6 +127,11 @@ public class Graph {
 
                 int node1 = Integer.parseInt(nodeStrings[0]);
                 int node2 = Integer.parseInt(nodeStrings[1]);
+                double weight = Double.parseDouble(nodeStrings[2]);
+
+               this.adjCost.get(node1).put(node2, weight);
+               this.adjCost.get(node2).put(node1, weight);
+
 
                 if (reprChoice == 0) {
                     this.adjMatrix.get(node1).set(node2, true);
@@ -143,6 +163,15 @@ public class Graph {
      */
     public int getNEdges() {
         return nEdges;
+    }
+
+    /**
+     * Retorna o peso - ou custo - associado a uma dada aresta,
+     * dados os vértices origem e destino dessa aresta.
+     * @return Peso de uma aresta.
+     */
+    public double getWeight(int source, int dest) {
+        return this.adjCost.get(source).get(dest);
     }
 
     /**

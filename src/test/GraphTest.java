@@ -364,8 +364,7 @@ class GraphTest {
         for (Graph graph : cases) {
             graph.printReport(outDir + graph.getInputFile() + ".txt");
         }
-//        pdfGraph.printReport(pdfGraph.getInputFilePath());
-//        disconnected6.printReport(disconnected6.getInputFilePath());
+
     }
 
 }
