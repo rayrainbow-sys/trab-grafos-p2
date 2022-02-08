@@ -31,7 +31,7 @@ class GraphTest {
     @BeforeAll
     static void setUp() {
         try {
-            pdfGraph = new Graph("src/test/input/pdf.txt", 1);
+            pdfGraph = new Graph("src/test/input/pdf.txt");
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo do pdf");
             // Como lidar com isso nos testes?
@@ -41,41 +41,41 @@ class GraphTest {
         }
 
         try {
-            pdf2M = new Graph("src/test/input/pdf2.txt", 0);
-            pdf2L = new Graph("src/test/input/pdf2.txt", 1);
+            pdf2M = new Graph("src/test/input/pdf2.txt");
+            pdf2L = new Graph("src/test/input/pdf2.txt");
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo do pdf");
 
         }
 
         try {
-            connected7 = new Graph("src/test/input/teste1.txt", 0);
+            connected7 = new Graph("src/test/input/teste1.txt");
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo manual 1");
         }
 
         try {
-            disconnected6 = new Graph("src/test/input/teste2.txt", 0);
+            disconnected6 = new Graph("src/test/input/teste2.txt");
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo manual 2");
         }
 
         try {
-            disconnected15 = new Graph("src/test/input/teste3.txt", 1);
+            disconnected15 = new Graph("src/test/input/teste3.txt");
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo manual 3");
         }
 
         try {
-            bfsTreeM6 = new Graph("src/test/input/bfstree_root6.txt", 0);
-            bfsTreeL6 = new Graph("src/test/input/bfstree_root6.txt", 1);
+            bfsTreeM6 = new Graph("src/test/input/bfstree_root6.txt");
+            bfsTreeL6 = new Graph("src/test/input/bfstree_root6.txt");
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo da BFS (slide)");
         }
 
         try {
-            dfsTreeM4 = new Graph("src/test/input/dfstree_root4.txt", 0);
-            dfsTreeL4 = new Graph("src/test/input/dfstree_root4.txt", 1);
+            dfsTreeM4 = new Graph("src/test/input/dfstree_root4.txt");
+            dfsTreeL4 = new Graph("src/test/input/dfstree_root4.txt");
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo da DFS (slide)");
         }
@@ -364,6 +364,7 @@ class GraphTest {
     void getEdgeWeight() {
         assertEquals(-9.5, pdf2M.getWeight(3, 4));
         assertEquals(-9.5, pdf2M.getWeight(4, 3));
+        assertEquals(1.0, disconnected6.getWeight(1, 4));
     }
 
     @Test
@@ -373,7 +374,7 @@ class GraphTest {
         assertEquals("bfstree_root6", bfsTreeM6.getInputFile());
     }
 
-    @Test
+   /* @Test
     @DisplayName("Impressão de relatório - verif. manual")
     void printReport() throws IOException {
         String outDir = "src/test/reports/";
@@ -384,6 +385,6 @@ class GraphTest {
         }
 //        pdfGraph.printReport(pdfGraph.getInputFilePath());
 //        disconnected6.printReport(disconnected6.getInputFilePath());
-    }
+    }*/
 
 }
