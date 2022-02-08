@@ -5,6 +5,10 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.lang.Math;
 
+import java.lang.reflect.Array;
+import java.util.*;
+import java.lang.Math;
+
 // Leitura e escrita de arquivos:
 import java.io.File;
 import java.io.FileWriter;
@@ -37,34 +41,34 @@ public class Graph {
     /**
      * Representação do grafo por matriz de adjacência (será null caso o
      * usuário opte pela representação por lista).
-     */
-    private ArrayList<ArrayList<Boolean>> adjMatrix;
+
+    private ArrayList<ArrayList<Double>> adjMatrix;*/
 
     /**
      * Representação do grafo por lista de adjacência (será null caso o
      * usuário opte pela representação por lista).
      */
-    private ArrayList<LinkedList<Integer>> adjList;
+    //private ArrayList<LinkedList<Integer>> adjList;
 
     /**
      * Representação dos custos das adjacências do grafo.
      */
-    private ArrayList<LinkedHashMap<Integer, Double>> adjCost;
+    private ArrayList<LinkedHashMap<Integer, Double>> adjList;
+
+    //private double inf = Double.POSITIVE_INFINITY;
 
     /**
      * Construtor da classe Graph.
      * @param filepath Arquivo de entrada no formato especificado. O caminho pode
      *                 ser especificado de forma absoluta ou relativa, a partir da
      *                 raiz do projeto.
-     * @param reprChoice O valor 0 indica escolha pela representação por matriz de
-     *                   adjacências; 1 define a opção pela lista de adjacências.
      */
-    public Graph(String filepath, int reprChoice) throws InstantiationException {
-        if (reprChoice != 1 && reprChoice !=0) {
+    public Graph(String filepath) throws InstantiationException {
+        /*if (reprChoice != 1 && reprChoice !=0) {
             System.err.println("Argumento invalido: use 0 para representacao " +
                     "por matriz, 1 para lista");
             throw new InstantiationException("Arquivo de entrada inexistente; grafo nao instanciado");
-        }  // else
+        }  // else*/
 
         try {
             inputFile = filepath.substring(filepath.lastIndexOf("/") + 1);
@@ -76,43 +80,17 @@ public class Graph {
             this.nNodes = Integer.parseInt(inputReader.nextLine());
             this.nEdges = 0;  // acumulador
 
-            this.adjCost = new ArrayList<LinkedHashMap<Integer, Double>>();
+
+            this.adjList = new ArrayList<LinkedHashMap<Integer, Double>>();
 
             for (int i = 0; i <= this.getNNodes(); i++) {
                 LinkedHashMap<Integer, Double> costList = new LinkedHashMap<Integer, Double>();
-                
+
                 costList.put(i, 0.0);
-                
-                this.adjCost.add(costList);
+
+                this.adjList.add(costList);
             }
 
-            if (reprChoice == 0) {
-                this.adjList = null;
-                this.adjMatrix = new ArrayList<ArrayList<Boolean>>();
-
-                // Inicializa matriz de adjacência com zeros
-                for (int i=0; i <= this.getNNodes(); i++) {
-                    ArrayList<Boolean> row = new ArrayList<Boolean>();
-
-                    for (int j = 0; j <= this.getNNodes(); j++) {
-                        row.add(false);
-                    }
-
-                    this.adjMatrix.add(row);
-                }
-
-            } else {
-                this.adjMatrix = null;
-                this.adjList = new ArrayList<LinkedList<Integer>>();
-
-                // Inicializa lista de adjacências sem vizinhos
-                for (int i=0; i <= this.getNNodes(); i++) {
-                    LinkedList<Integer> ll = new LinkedList<Integer>();
-                    ll.add(i);
-
-                    this.adjList.add(ll);
-                }
-            }
 
             // Obs: não sei se é o melhor caminho, mas, como ele indexa a partir
             // do 1, em ambos os casos incluí o índice 0, mas pra deixar "em
@@ -127,18 +105,15 @@ public class Graph {
 
                 int node1 = Integer.parseInt(nodeStrings[0]);
                 int node2 = Integer.parseInt(nodeStrings[1]);
-                double weight = Double.parseDouble(nodeStrings[2]);
 
-               this.adjCost.get(node1).put(node2, weight);
-               this.adjCost.get(node2).put(node1, weight);
+                if (nodeStrings.length == 3) {
+                    double weight = Double.parseDouble(nodeStrings[2]);
 
-
-                if (reprChoice == 0) {
-                    this.adjMatrix.get(node1).set(node2, true);
-                    this.adjMatrix.get(node2).set(node1, true);
+                    this.adjList.get(node1).put(node2, weight);
+                    this.adjList.get(node2).put(node1, weight);
                 } else {
-                    this.adjList.get(node1).add(node2);
-                    this.adjList.get(node2).add(node1);
+                    this.adjList.get(node1).put(node2, 1.0);
+                    this.adjList.get(node2).put(node1, 1.0);
                 }
             }
 
@@ -171,7 +146,7 @@ public class Graph {
      * @return Peso de uma aresta.
      */
     public double getWeight(int source, int dest) {
-        return this.adjCost.get(source).get(dest);
+        return this.adjList.get(source).get(dest);
     }
 
     /**
@@ -207,20 +182,20 @@ public class Graph {
     public ArrayList<Integer> getNeighbors(int node) {
         ArrayList<Integer> neighbors;
 
-        if (this.adjList == null) {
+        /*if (this.adjList == null) {
             neighbors = new ArrayList<Integer>();
-            ArrayList<Boolean> mtxRow = adjMatrix.get(node);
+            ArrayList<Double> mtxRow = adjMatrix.get(node);
 
             for (int i=1; i<=nNodes; i++) {
-                if (mtxRow.get(i)) {
+                if (mtxRow.get(i) != inf) {
                     neighbors.add(i);
                 }
             }
-        } else {
-            LinkedList<Integer> ll = adjList.get(node);
-            neighbors = new ArrayList<Integer>(ll);
+        } else {*/
+            LinkedHashMap<Integer, Double> ll = adjList.get(node);
+            neighbors = new ArrayList<Integer>(ll.keySet());
             neighbors.remove(0); // o próprio nó
-        }
+        //}
 
         return neighbors;
     }
@@ -432,12 +407,14 @@ public class Graph {
         // outras coisas também. Como a versão "mais feia"/com duplicações
         // funciona, optamos por deixar assim a versao final.
 
-        if (this.adjMatrix == null) {  // repr por lista
+        //if (this.adjMatrix == null) {  // repr por lista
             while (queue.size() != 0) {
                 int v = queue.remove();
                 int vLvl = connectedToOrigin.get(v)[1];
 
-                Iterator<Integer> iter = adjList.get(v).listIterator();
+
+
+                Iterator<Integer> iter = adjList.get(v).keySet().iterator();
 
                 while (iter.hasNext()) {
                     int w = iter.next();
@@ -455,7 +432,7 @@ public class Graph {
                     }
                 }
             }
-        } else {  // repr por matriz
+       /* } else {  // repr por matriz
             while (queue.size() != 0) {
                 int v = queue.remove();
                 int vLvl = connectedToOrigin.get(v)[1];
@@ -484,7 +461,7 @@ public class Graph {
                     colCounter++;
                 }
             }
-        }
+        }*/
         return connectedToOrigin;
     }
 
@@ -732,11 +709,11 @@ public class Graph {
         bw.write("Relatorio sobre o grafo " + this.getInputFile());
         bw.write("\n(Representacao interna: ");
 
-        if (this.adjMatrix == null) {
+        //if (this.adjMatrix == null) {
             bw.write("lista ");
-        } else {
+       /* } else {
             bw.write("matriz ");
-        }
+        }*/
 
         bw.write("de adjacências)");
 
