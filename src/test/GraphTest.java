@@ -23,6 +23,9 @@ class GraphTest {
     private static Graph dfsTreeM4;  // raiz: nó 4
     private static Graph dfsTreeL4;
 
+    private static Graph pdf2M;
+    private static Graph pdf2L;
+
     private static final double eps = 1e-6;  // p/ comparações de floats
 
     @BeforeAll
@@ -35,6 +38,14 @@ class GraphTest {
             // A rigor, acho que a gente deveria estar testando se cada um é null antes
             // de rodar mais testes, mas, como são sempre os mesmos 4 e já sabemos que
             // estão funcionando, vou evitar ficar enchendo de if (... != null)
+        }
+
+        try {
+            pdf2M = new Graph("src/test/input/pdf2.txt", 0);
+            pdf2L = new Graph("src/test/input/pdf2.txt", 1);
+        } catch (InstantiationException exc) {
+            System.err.println("Falha na criacao do grafo do pdf");
+
         }
 
         try {
@@ -297,9 +308,9 @@ class GraphTest {
 
         System.out.println(
                 "Real (15 nós): " +
-                disconnected15.calcDiameter() +
-                "\nAproximado (10 nós): " +
-                disconnected15.calcDiameter(10));
+                        disconnected15.calcDiameter() +
+                        "\nAproximado (10 nós): " +
+                        disconnected15.calcDiameter(10));
 
         // às vezes dá 3, às vezes dá 4 (o certo); parece razoável
     }
@@ -349,6 +360,13 @@ class GraphTest {
     }
 
     @Test
+    @DisplayName("Peso de uma aresta qualquer")
+    void getEdgeWeight() {
+        assertEquals(-9.5, pdf2M.getWeight(3, 4));
+        assertEquals(-9.5, pdf2M.getWeight(4, 3));
+    }
+
+    @Test
     @DisplayName("Nome do arquivo de origem (sem caminho)")
     void getInputFile() {
         assertEquals("teste3", disconnected15.getInputFile());
@@ -364,7 +382,8 @@ class GraphTest {
         for (Graph graph : cases) {
             graph.printReport(outDir + graph.getInputFile() + ".txt");
         }
-
+//        pdfGraph.printReport(pdfGraph.getInputFilePath());
+//        disconnected6.printReport(disconnected6.getInputFilePath());
     }
 
 }
