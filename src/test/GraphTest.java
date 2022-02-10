@@ -364,7 +364,7 @@ class GraphTest {
     void getEdgeWeight() {
         assertEquals(-9.5, pdf2M.getWeight(3, 4));
         assertEquals(-9.5, pdf2M.getWeight(4, 3));
-        assertEquals(1.0, disconnected6.getWeight(1, 4));
+        assertEquals(0.0, disconnected6.getWeight(1, 1));
     }
 
     @Test

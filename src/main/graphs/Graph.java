@@ -1,13 +1,11 @@
 package graphs;
 
+
 // Estruturas de dados etc.:
 import java.lang.reflect.Array;
 import java.util.*;
 import java.lang.Math;
-
-import java.lang.reflect.Array;
-import java.util.*;
-import java.lang.Math;
+import graphs.Node;
 
 // Leitura e escrita de arquivos:
 import java.io.File;
@@ -27,7 +25,6 @@ public class Graph {
      * Nome do arquivo de origem, sem caminho e sem extensão.
      */
     private String inputFile;
-
     /**
      * Número de nós do grafo.
      */
@@ -112,8 +109,8 @@ public class Graph {
                     this.adjList.get(node1).put(node2, weight);
                     this.adjList.get(node2).put(node1, weight);
                 } else {
-                    this.adjList.get(node1).put(node2, 1.0);
-                    this.adjList.get(node2).put(node1, 1.0);
+                    this.adjList.get(node1).put(node2, 0.00);
+                    this.adjList.get(node2).put(node1, 0.00);
                 }
             }
 
@@ -692,6 +689,64 @@ public class Graph {
         Collections.reverse(components);  // ordem decrescente de tamanho
 
         return components;
+    }
+
+    /**
+     * Implementa o algoritmo de Dijkstra para encontrar a distância e
+     * o caminho mínimo entre dois vértices, caso o grafo não possua
+     * nenhum peso negativo.
+     * @param origin Índice do vértice a ser usado como origem da busca.
+     * @param goal Índice do vértice buscado.
+     * @return
+     */
+
+    public Object[] dikjstra(int origin, int goal) {
+        Double inf = Double.POSITIVE_INFINITY;
+
+        ArrayList<Double> dist = new ArrayList<>();
+
+        //Instanciamos uma fila de prioridade que ordena os pesos dos vértices de forma
+        //crescente
+        PriorityQueue<Map.Entry<Integer, Double>> PQ = new PriorityQueue<>(Map.Entry.comparingByValue());
+
+        ArrayList<Integer> prev = new ArrayList<>();
+
+        //Custo ou distância para sair da origem e chegar na própria origem
+        //é naturalmente zero.
+        dist.add(origin, 0.0);
+
+        for (int i = 1; i <= this.getNNodes(); i++) {
+            if (i != origin) {
+                dist.add(i, inf);
+                prev.add(i, null);
+            }
+
+            if (this.adjList.get(origin).get(i) != null) {
+                PQ.add(new AbstractMap.SimpleEntry<Integer, Double>(i, dist.get(i)));
+            }
+        }
+
+        while (!PQ.isEmpty()) {
+            //Primeiramente, instanciamos u que é a entrada com o vértice cuja aresta com o
+            //vértice origem tem o menor peso, vide fila de prioridade.
+            Map.Entry<Integer, Double> u = PQ.poll();
+
+            for (Map.Entry<Integer, Double> v : this.adjList.get(u.getKey()).entrySet()) {
+                double alt = dist.get(u.getKey()) + this.getWeight(u.getKey(), v.getKey());
+
+                if (alt < dist.get(v.getKey())) {
+                    dist.add(v.getKey(), alt);
+                    prev.add(v.getKey(), u.getKey());
+                    PQ.remove(v);
+                    PQ.add(new AbstractMap.SimpleEntry<Integer, Double>(v.getKey(), alt));
+                }
+                if (v.getKey() == goal) break;
+            }
+        }
+
+        Object[] results = {dist, prev};
+
+        return results;
     }
 
     /**
