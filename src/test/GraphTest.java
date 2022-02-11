@@ -23,8 +23,7 @@ class GraphTest {
     private static Graph dfsTreeM4;  // raiz: nó 4
     private static Graph dfsTreeL4;
 
-    private static Graph pdf2M;
-    private static Graph pdf2L;
+    private static Graph pdf2;
 
     private static final double eps = 1e-6;  // p/ comparações de floats
 
@@ -41,8 +40,7 @@ class GraphTest {
         }
 
         try {
-            pdf2M = new Graph("src/test/input/pdf2.txt");
-            pdf2L = new Graph("src/test/input/pdf2.txt");
+            pdf2 = new Graph("src/test/input/pdf2.txt");
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo do pdf");
 
@@ -362,8 +360,8 @@ class GraphTest {
     @Test
     @DisplayName("Peso de uma aresta qualquer")
     void getEdgeWeight() {
-        assertEquals(-9.5, pdf2M.getWeight(3, 4));
-        assertEquals(-9.5, pdf2M.getWeight(4, 3));
+        assertEquals(-9.5, pdf2.getWeight(3, 4));
+        assertEquals(-9.5, pdf2.getWeight(4, 3));
         assertEquals(0.0, disconnected6.getWeight(1, 1));
     }
 
@@ -372,6 +370,22 @@ class GraphTest {
     void getInputFile() {
         assertEquals("teste3", disconnected15.getInputFile());
         assertEquals("bfstree_root6", bfsTreeM6.getInputFile());
+    }
+
+    @Test
+    @DisplayName("Caminho minimo e custo minimo de grafo sem pesos negativos com Dijkstra.")
+    void shortestPositivePath() {
+        Object[] dfsTreeL4Dij = dfsTreeL4.dikjstra(4, 8);
+
+        assertEquals(3.0, dfsTreeL4Dij[1]);
+    }
+
+    @Test
+    @DisplayName("Caminho minimo e custo minimo de grafo sem pesos negativos com Dijkstra.")
+    void shortestPath() throws Throwable {
+        Object[] pdf2BF = pdf2.bellmanFord(4);
+
+        assertEquals(4.0, pdf2BF[0]);
     }
 
    /* @Test

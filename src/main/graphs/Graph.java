@@ -5,7 +5,6 @@ package graphs;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.lang.Math;
-import graphs.Node;
 
 // Leitura e escrita de arquivos:
 import java.io.File;
@@ -113,7 +112,6 @@ public class Graph {
                     this.adjList.get(node2).put(node1, 0.00);
                 }
             }
-
             inputReader.close();
         } catch (FileNotFoundException exc) {
             System.err.println("Falha na leitura de " + filepath);
@@ -179,20 +177,9 @@ public class Graph {
     public ArrayList<Integer> getNeighbors(int node) {
         ArrayList<Integer> neighbors;
 
-        /*if (this.adjList == null) {
-            neighbors = new ArrayList<Integer>();
-            ArrayList<Double> mtxRow = adjMatrix.get(node);
-
-            for (int i=1; i<=nNodes; i++) {
-                if (mtxRow.get(i) != inf) {
-                    neighbors.add(i);
-                }
-            }
-        } else {*/
-            LinkedHashMap<Integer, Double> ll = adjList.get(node);
-            neighbors = new ArrayList<Integer>(ll.keySet());
-            neighbors.remove(0); // o próprio nó
-        //}
+        LinkedHashMap<Integer, Double> ll = adjList.get(node);
+        neighbors = new ArrayList<Integer>(ll.keySet());
+        neighbors.remove(0); // o próprio nó
 
         return neighbors;
     }
@@ -404,12 +391,9 @@ public class Graph {
         // outras coisas também. Como a versão "mais feia"/com duplicações
         // funciona, optamos por deixar assim a versao final.
 
-        //if (this.adjMatrix == null) {  // repr por lista
             while (queue.size() != 0) {
                 int v = queue.remove();
                 int vLvl = connectedToOrigin.get(v)[1];
-
-
 
                 Iterator<Integer> iter = adjList.get(v).keySet().iterator();
 
@@ -429,36 +413,7 @@ public class Graph {
                     }
                 }
             }
-       /* } else {  // repr por matriz
-            while (queue.size() != 0) {
-                int v = queue.remove();
-                int vLvl = connectedToOrigin.get(v)[1];
 
-                ArrayList<Boolean> mtxVertexRow = adjMatrix.get(v);
-
-                Iterator<Boolean> iter = mtxVertexRow.iterator();
-
-                int colCounter = 0;
-
-                while (iter.hasNext()) {
-                    Boolean w = iter.next();
-
-                    if (w) {
-                        if (!known[colCounter]) {
-                            known[colCounter] = true;
-                            connectedToOrigin.put(colCounter, new Integer[]{v,
-                                    vLvl + 1});
-                            queue.add(colCounter);
-
-                            if (colCounter == goal) {
-                                return connectedToOrigin;
-                            }
-                        }
-                    }
-                    colCounter++;
-                }
-            }
-        }*/
         return connectedToOrigin;
     }
 
@@ -704,26 +659,24 @@ public class Graph {
         Double inf = Double.POSITIVE_INFINITY;
 
         ArrayList<Double> dist = new ArrayList<>();
+        HashMap<Integer, Integer> prev = new HashMap<>();
 
         //Instanciamos uma fila de prioridade que ordena os pesos dos vértices de forma
         //crescente
         PriorityQueue<Map.Entry<Integer, Double>> PQ = new PriorityQueue<>(Map.Entry.comparingByValue());
 
-        ArrayList<Integer> prev = new ArrayList<>();
+        for (int i = 0; i <= this.getNNodes(); i++) {
+            dist.add(null);
+            //prev.add(null);
+        }
 
         //Custo ou distância para sair da origem e chegar na própria origem
         //é naturalmente zero.
-        dist.add(origin, 0.0);
+        dist.set(origin, 0.0);
 
         for (int i = 1; i <= this.getNNodes(); i++) {
-            if (i != origin) {
-                dist.add(i, inf);
-                prev.add(i, null);
-            }
-
-            if (this.adjList.get(origin).get(i) != null) {
-                PQ.add(new AbstractMap.SimpleEntry<Integer, Double>(i, dist.get(i)));
-            }
+            if (i != origin) dist.set(i, inf);
+            PQ.add(new AbstractMap.SimpleEntry<Integer, Double>(i, dist.get(i)));
         }
 
         while (!PQ.isEmpty()) {
@@ -731,22 +684,166 @@ public class Graph {
             //vértice origem tem o menor peso, vide fila de prioridade.
             Map.Entry<Integer, Double> u = PQ.poll();
 
+            //Para cada vértice v adjacente a u
             for (Map.Entry<Integer, Double> v : this.adjList.get(u.getKey()).entrySet()) {
                 double alt = dist.get(u.getKey()) + this.getWeight(u.getKey(), v.getKey());
 
                 if (alt < dist.get(v.getKey())) {
-                    dist.add(v.getKey(), alt);
-                    prev.add(v.getKey(), u.getKey());
+                    dist.set(v.getKey(), alt);
+                    prev.put(v.getKey(), u.getKey());
                     PQ.remove(v);
                     PQ.add(new AbstractMap.SimpleEntry<Integer, Double>(v.getKey(), alt));
+
+                    if (v.getKey() == goal) {
+                        Object[] results = {dist.get(goal), prev};
+
+                        return results;
+                    }
                 }
-                if (v.getKey() == goal) break;
+
             }
         }
 
         Object[] results = {dist, prev};
 
         return results;
+    }
+
+    /**
+     * Implementa o algoritmo de Dijkstra para encontrar o menor (menos custoso)
+     * caminho do vértice origin a todos os outros do grafo.
+     * @param origin
+     * @return
+     */
+    public Object[] dikjstra(int origin) {
+        return this.dikjstra(origin, -1);
+    }
+
+    public Object[] bellmanFord(int origin, int goal) throws Throwable {
+        Double inf = Double.POSITIVE_INFINITY;
+
+        ArrayList<Double> dist = new ArrayList<>();
+        HashMap<Integer, Integer> prev = new HashMap<>();
+
+        //Instanciamos uma fila de prioridade que ordena os pesos dos vértices de forma
+        //crescente
+        Queue<Map.Entry<Integer, Double>> Q = new LinkedList<>();
+
+        for (int i = 0; i <= this.getNNodes(); i++) {
+            dist.add(null);
+        }
+
+        for (int i = 1; i <= this.getNNodes(); i++) {
+            dist.set(i, inf);
+        }
+
+        //Custo ou distância para sair da origem e chegar na própria origem
+        //é naturalmente zero.
+        dist.set(origin, 0.0);
+
+        Q.add(new AbstractMap.SimpleEntry<Integer, Double>(origin, dist.get(origin)));
+
+        Boolean updated;
+
+        while (!Q.isEmpty()) {
+            //Primeiramente, instanciamos u que é a entrada com o vértice cuja aresta com o
+            //vértice origem tem o menor peso, vide fila de prioridade.
+            Map.Entry<Integer, Double> u = Q.poll();
+
+            updated = false;
+
+            //Para cada vértice v adjacente a u
+            for (Map.Entry<Integer, Double> v : this.adjList.get(u.getKey()).entrySet()) {
+                double alt = dist.get(u.getKey()) + this.getWeight(u.getKey(), v.getKey());
+
+                if (alt < dist.get(v.getKey())) {
+                    dist.set(v.getKey(), alt);
+                    prev.put(v.getKey(), u.getKey());
+                    updated = true;
+
+                    if (!Q.contains(v)) {
+                        Q.add(new AbstractMap.SimpleEntry<Integer, Double>(v.getKey(), alt));
+                    }
+
+                    if (v.getKey() == goal) {
+                        Object[] results = {dist.get(goal), prev.get(goal)};
+
+                        return results;
+                    }
+                }
+                if (!updated) break;
+            }
+
+            for (Map.Entry<Integer, Double> v : this.adjList.get(u.getKey()).entrySet()) {
+                double alt = dist.get(u.getKey()) + this.getWeight(u.getKey(), v.getKey());
+
+                if (alt < dist.get(v.getKey())) {
+                    throw new Throwable("Ciclo negativo detectado.");
+                }
+            }
+        }
+
+        Object[] results = {dist, prev};
+
+        return results;
+    }
+
+    public Object[] bellmanFord(int origin) throws Throwable {
+        return this.bellmanFord(origin, -1);
+    }
+
+    public void prim(int origin) {
+        Double inf = Double.POSITIVE_INFINITY;
+
+        ArrayList<Double> cost = new ArrayList<>();
+        HashMap<Integer, Integer> prev = new HashMap<>();
+
+        //Instanciamos uma fila de prioridade que ordena os pesos dos vértices de forma
+        //crescente
+        PriorityQueue<Map.Entry<Integer, Double>> PQ = new PriorityQueue<>(Map.Entry.comparingByValue());
+
+        for (int i = 0; i <= this.getNNodes(); i++) {
+            cost.add(null);
+            //prev.add(null);
+        }
+
+        //Custo ou distância para sair da origem e chegar na própria origem
+        //é naturalmente zero.
+        cost.set(origin, 0.0);
+
+        for (int i = 1; i <= this.getNNodes(); i++) {
+            if (i != origin) cost.set(i, inf);
+            PQ.add(new AbstractMap.SimpleEntry<Integer, Double>(i, cost.get(i)));
+        }
+
+        while (!PQ.isEmpty()) {
+            //Primeiramente, instanciamos u que é a entrada com o vértice cuja aresta com o
+            //vértice origem tem o menor peso, vide fila de prioridade.
+            Map.Entry<Integer, Double> u = PQ.poll();
+
+            //Para cada vértice v adjacente a u
+            for (Map.Entry<Integer, Double> v : this.adjList.get(u.getKey()).entrySet()) {
+                //double alt = cost.get(u.getKey()) + this.getWeight(u.getKey(), v.getKey());
+
+                if (cost.get(v.getKey()) > this.getWeight(u.getKey(), v.getKey())) {
+                    cost.set(v.getKey(), this.getWeight(u.getKey(), v.getKey()));
+                    prev.put(v.getKey(), u.getKey());
+                    PQ.remove(v);
+                    PQ.add(new AbstractMap.SimpleEntry<Integer, Double>(v.getKey(), this.getWeight(u.getKey(), v.getKey())));
+
+                    /*if (v.getKey() == goal) {
+                        Object[] results = {dist.get(goal), prev};
+
+                        return results;
+                    }*/
+                }
+
+            }
+        }
+
+        Object[] results = {cost, prev};
+
+        //return results;
     }
 
     /**
