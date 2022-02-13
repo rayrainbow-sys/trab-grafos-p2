@@ -1,13 +1,11 @@
+import jdk.internal.access.JavaIOFileDescriptorAccess;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import graphs.Graph;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Iterator;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,8 +22,10 @@ class GraphTest {
     private static Graph dfsTreeL4;
 
     private static Graph pdf2;
+    private static Graph primvid;
 
     private static final double eps = 1e-6;  // p/ comparações de floats
+
 
     @BeforeAll
     static void setUp() {
@@ -77,6 +77,14 @@ class GraphTest {
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo da DFS (slide)");
         }
+
+        try {
+            primvid = new Graph("src/test/input/prim_test.txt");
+        } catch (InstantiationException exc) {
+            System.err.println("Falha na criacao do grafo da DFS (slide)");
+        }
+
+
     }
 
 //    @AfterEach
@@ -360,8 +368,12 @@ class GraphTest {
     @Test
     @DisplayName("Peso de uma aresta qualquer")
     void getEdgeWeight() {
+        assertEquals(0.1, pdf2.getWeight(2, 1));
+        assertEquals(0.2, pdf2.getWeight(5, 2));
+        assertEquals(5.0, pdf2.getWeight(3, 5));
         assertEquals(-9.5, pdf2.getWeight(3, 4));
-        assertEquals(-9.5, pdf2.getWeight(4, 3));
+        assertEquals(2.3, pdf2.getWeight(4, 5));
+        assertEquals(1.0, pdf2.getWeight(5, 1));
         assertEquals(0.0, disconnected6.getWeight(1, 1));
     }
 
@@ -387,6 +399,18 @@ class GraphTest {
 
         assertEquals(4.0, pdf2BF[0]);
     }
+
+    @Test
+    @DisplayName("Árvore geradora mínima com Prim.")
+    void MST() {
+       Object[] primtest = primvid.prim(1);
+       Object[] pdf2test = pdf2.prim(1);
+      // Set<Map.Entry<Integer, Double>> adjlist = primvid.adjList.get(1).entrySet();
+
+        assertEquals(-6.9, pdf2test[0]);
+    }
+
+
 
    /* @Test
     @DisplayName("Impressão de relatório - verif. manual")

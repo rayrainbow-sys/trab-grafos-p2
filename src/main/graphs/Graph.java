@@ -2,7 +2,7 @@ package graphs;
 
 
 // Estruturas de dados etc.:
-import java.lang.reflect.Array;
+import java.sql.Array;
 import java.util.*;
 import java.lang.Math;
 
@@ -35,18 +35,6 @@ public class Graph {
     private int nEdges;
 
     /**
-     * Representação do grafo por matriz de adjacência (será null caso o
-     * usuário opte pela representação por lista).
-
-    private ArrayList<ArrayList<Double>> adjMatrix;*/
-
-    /**
-     * Representação do grafo por lista de adjacência (será null caso o
-     * usuário opte pela representação por lista).
-     */
-    //private ArrayList<LinkedList<Integer>> adjList;
-
-    /**
      * Representação dos custos das adjacências do grafo.
      */
     private ArrayList<LinkedHashMap<Integer, Double>> adjList;
@@ -60,11 +48,6 @@ public class Graph {
      *                 raiz do projeto.
      */
     public Graph(String filepath) throws InstantiationException {
-        /*if (reprChoice != 1 && reprChoice !=0) {
-            System.err.println("Argumento invalido: use 0 para representacao " +
-                    "por matriz, 1 para lista");
-            throw new InstantiationException("Arquivo de entrada inexistente; grafo nao instanciado");
-        }  // else*/
 
         try {
             inputFile = filepath.substring(filepath.lastIndexOf("/") + 1);
@@ -663,11 +646,10 @@ public class Graph {
 
         //Instanciamos uma fila de prioridade que ordena os pesos dos vértices de forma
         //crescente
-        PriorityQueue<Map.Entry<Integer, Double>> PQ = new PriorityQueue<>(Map.Entry.comparingByValue());
+        PriorityQueue<Double> PQ = new PriorityQueue<>();
 
         for (int i = 0; i <= this.getNNodes(); i++) {
-            dist.add(null);
-            //prev.add(null);
+            dist.add(inf);
         }
 
         //Custo ou distância para sair da origem e chegar na própria origem
@@ -675,32 +657,30 @@ public class Graph {
         dist.set(origin, 0.0);
 
         for (int i = 1; i <= this.getNNodes(); i++) {
-            if (i != origin) dist.set(i, inf);
-            PQ.add(new AbstractMap.SimpleEntry<Integer, Double>(i, dist.get(i)));
+            PQ.add(dist.get(i));
         }
 
         while (!PQ.isEmpty()) {
             //Primeiramente, instanciamos u que é a entrada com o vértice cuja aresta com o
             //vértice origem tem o menor peso, vide fila de prioridade.
-            Map.Entry<Integer, Double> u = PQ.poll();
+            Integer u = dist.indexOf(PQ.poll());
 
             //Para cada vértice v adjacente a u
-            for (Map.Entry<Integer, Double> v : this.adjList.get(u.getKey()).entrySet()) {
-                double alt = dist.get(u.getKey()) + this.getWeight(u.getKey(), v.getKey());
+            for (Integer v : this.getNeighbors(u)) {
+                double alt = dist.get(u) + this.getWeight(u, v);
 
-                if (alt < dist.get(v.getKey())) {
-                    dist.set(v.getKey(), alt);
-                    prev.put(v.getKey(), u.getKey());
-                    PQ.remove(v);
-                    PQ.add(new AbstractMap.SimpleEntry<Integer, Double>(v.getKey(), alt));
+                if (PQ.contains(dist.get(v)) && alt < dist.get(v)) {
+                    PQ.remove(dist.get(v));
+                    dist.set(v, alt);
+                    prev.put(v, u);
+                    PQ.add(dist.get(v));
 
-                    if (v.getKey() == goal) {
+                    if (v == goal) {
                         Object[] results = {dist.get(goal), prev};
 
                         return results;
                     }
                 }
-
             }
         }
 
@@ -792,19 +772,20 @@ public class Graph {
         return this.bellmanFord(origin, -1);
     }
 
-    public void prim(int origin) {
+    public Object[] prim(int origin) {
         Double inf = Double.POSITIVE_INFINITY;
 
         ArrayList<Double> cost = new ArrayList<>();
-        HashMap<Integer, Integer> prev = new HashMap<>();
+        ArrayList<Integer> parent = new ArrayList<>();
+        HashMap<Integer, Integer> MST = new HashMap<>();
 
         //Instanciamos uma fila de prioridade que ordena os pesos dos vértices de forma
         //crescente
-        PriorityQueue<Map.Entry<Integer, Double>> PQ = new PriorityQueue<>(Map.Entry.comparingByValue());
+        PriorityQueue<Double> PQ = new PriorityQueue<>();
 
         for (int i = 0; i <= this.getNNodes(); i++) {
-            cost.add(null);
-            //prev.add(null);
+            cost.add(inf);
+            parent.add(null);
         }
 
         //Custo ou distância para sair da origem e chegar na própria origem
@@ -812,38 +793,36 @@ public class Graph {
         cost.set(origin, 0.0);
 
         for (int i = 1; i <= this.getNNodes(); i++) {
-            if (i != origin) cost.set(i, inf);
-            PQ.add(new AbstractMap.SimpleEntry<Integer, Double>(i, cost.get(i)));
+            PQ.add(cost.get(i));
         }
+
+        Double w = 0.0;
 
         while (!PQ.isEmpty()) {
             //Primeiramente, instanciamos u que é a entrada com o vértice cuja aresta com o
             //vértice origem tem o menor peso, vide fila de prioridade.
-            Map.Entry<Integer, Double> u = PQ.poll();
+            Integer u = cost.indexOf(PQ.poll());
+            w += cost.get(u);
+            cost.set(u, null);
+
+            if (parent.get(u) != null) MST.put(u, parent.get(u));
 
             //Para cada vértice v adjacente a u
-            for (Map.Entry<Integer, Double> v : this.adjList.get(u.getKey()).entrySet()) {
-                //double alt = cost.get(u.getKey()) + this.getWeight(u.getKey(), v.getKey());
+            for (Integer v : this.getNeighbors(u)) {
+                double alt = this.getWeight(u, v);
 
-                if (cost.get(v.getKey()) > this.getWeight(u.getKey(), v.getKey())) {
-                    cost.set(v.getKey(), this.getWeight(u.getKey(), v.getKey()));
-                    prev.put(v.getKey(), u.getKey());
-                    PQ.remove(v);
-                    PQ.add(new AbstractMap.SimpleEntry<Integer, Double>(v.getKey(), this.getWeight(u.getKey(), v.getKey())));
-
-                    /*if (v.getKey() == goal) {
-                        Object[] results = {dist.get(goal), prev};
-
-                        return results;
-                    }*/
+                if (PQ.contains(cost.get(v)) && alt < cost.get(v)) {
+                    PQ.remove(cost.get(v));
+                    cost.set(v, alt);
+                    parent.set(v, u);
+                    PQ.add(cost.get(v));
                 }
-
             }
         }
 
-        Object[] results = {cost, prev};
+        Object[] results = {w, MST};
 
-        //return results;
+        return results;
     }
 
     /**
