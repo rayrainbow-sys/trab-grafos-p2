@@ -387,15 +387,15 @@ class GraphTest {
     @Test
     @DisplayName("Caminho minimo e custo minimo de grafo sem pesos negativos com Dijkstra.")
     void shortestPositivePath() {
-        Object[] dfsTreeL4Dij = dfsTreeL4.dikjstra(4, 8);
+        Object[] dfsTreeL4Dij = dfsTreeL4.dikjstra(2,8);
 
-        assertEquals(3.0, dfsTreeL4Dij[1]);
+        assertEquals(3.0, dfsTreeL4Dij[0]);
     }
 
     @Test
     @DisplayName("Caminho minimo e custo minimo de grafo sem pesos negativos com Dijkstra.")
     void shortestPath() throws Throwable {
-        Object[] pdf2BF = pdf2.bellmanFord(4);
+        Object[] pdf2BF = pdf2.bellmanFord(4, 8);
 
         assertEquals(4.0, pdf2BF[0]);
     }

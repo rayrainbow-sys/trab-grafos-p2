@@ -665,6 +665,7 @@ public class Graph {
             //vértice origem tem o menor peso, vide fila de prioridade.
             Integer u = dist.indexOf(PQ.poll());
 
+
             //Para cada vértice v adjacente a u
             for (Integer v : this.getNeighbors(u)) {
                 double alt = dist.get(u) + this.getWeight(u, v);
@@ -703,49 +704,53 @@ public class Graph {
         Double inf = Double.POSITIVE_INFINITY;
 
         ArrayList<Double> dist = new ArrayList<>();
+        ArrayList<Double> weight = new ArrayList<>();
         HashMap<Integer, Integer> prev = new HashMap<>();
+
+        for (int i = 0; i <= this.getNNodes(); i++) {
+            weight.add(null);
+        }
 
         //Instanciamos uma fila de prioridade que ordena os pesos dos vértices de forma
         //crescente
-        Queue<Map.Entry<Integer, Double>> Q = new LinkedList<>();
+        Queue<Double> Q = new LinkedList<>();
 
         for (int i = 0; i <= this.getNNodes(); i++) {
-            dist.add(null);
-        }
-
-        for (int i = 1; i <= this.getNNodes(); i++) {
-            dist.set(i, inf);
+            dist.add(inf);
+            if (this.adjList.get(origin).get(i) != null) {
+                weight.set(i, this.adjList.get(origin).get(i));
+            }
         }
 
         //Custo ou distância para sair da origem e chegar na própria origem
         //é naturalmente zero.
         dist.set(origin, 0.0);
 
-        Q.add(new AbstractMap.SimpleEntry<Integer, Double>(origin, dist.get(origin)));
+        Q.add(dist.get(origin));
 
         Boolean updated;
 
         while (!Q.isEmpty()) {
             //Primeiramente, instanciamos u que é a entrada com o vértice cuja aresta com o
             //vértice origem tem o menor peso, vide fila de prioridade.
-            Map.Entry<Integer, Double> u = Q.poll();
+            Integer u = dist.indexOf(Q.poll());
 
             updated = false;
 
             //Para cada vértice v adjacente a u
-            for (Map.Entry<Integer, Double> v : this.adjList.get(u.getKey()).entrySet()) {
-                double alt = dist.get(u.getKey()) + this.getWeight(u.getKey(), v.getKey());
+            for (Integer v : this.getNeighbors(u)) {
+                double alt = dist.get(u) + this.getWeight(u, v);
 
-                if (alt < dist.get(v.getKey())) {
-                    dist.set(v.getKey(), alt);
-                    prev.put(v.getKey(), u.getKey());
+                if (alt < dist.get(v) && u != prev.get(v)) {
+                    dist.set(v, alt);
+                    prev.put(v, u);
                     updated = true;
 
-                    if (!Q.contains(v)) {
-                        Q.add(new AbstractMap.SimpleEntry<Integer, Double>(v.getKey(), alt));
+                    if (!Q.contains(v)) {//consertar esse indice
+                        Q.add(dist.get(v));
                     }
 
-                    if (v.getKey() == goal) {
+                    if (v == goal) {
                         Object[] results = {dist.get(goal), prev.get(goal)};
 
                         return results;
@@ -754,10 +759,10 @@ public class Graph {
                 if (!updated) break;
             }
 
-            for (Map.Entry<Integer, Double> v : this.adjList.get(u.getKey()).entrySet()) {
-                double alt = dist.get(u.getKey()) + this.getWeight(u.getKey(), v.getKey());
+            for (Integer v : this.getNeighbors(u)) {
+                double alt = dist.get(u) + this.getWeight(u, v);
 
-                if (alt < dist.get(v.getKey())) {
+                if (alt < dist.get(v)) {
                     throw new Throwable("Ciclo negativo detectado.");
                 }
             }
