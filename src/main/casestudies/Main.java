@@ -92,7 +92,7 @@ public class Main {
             }
 
             if (i >= 3) {
-                nRuns = 10;
+                nRuns = 1;
                 // na velocidade em que estava, íamos estourar o prazo só
                 // esperando o algoritmo rodar...
             }
@@ -143,14 +143,14 @@ public class Main {
                 System.exit(1);
             }
 
-            if (i > 2) {
+            /*if (i > 2) {
                 try {
                     graph.printMST(outDir + "mst_" + i + ".txt");
                 } catch (IOException exc) {
                     System.err.println("Falha na escrita do arquivo txt das árvores");
                     System.exit(1);
                 }
-            }
+            }*/
 
         }
 

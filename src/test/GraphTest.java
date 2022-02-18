@@ -15,6 +15,12 @@ class GraphTest {
     private static Graph disconnected6;
     private static Graph disconnected15;
 
+    private static Graph g4;
+    //private static Graph g2;
+    //private static Graph g3;
+    //private static Graph g4;
+    //private static Graph g5;
+//
     private static Graph bfsTreeM6;  // raiz: nó 6
     private static Graph bfsTreeL6;
 
@@ -82,6 +88,16 @@ class GraphTest {
             primvid = new Graph("src/test/input/prim_test.txt");
         } catch (InstantiationException exc) {
             System.err.println("Falha na criacao do grafo da DFS (slide)");
+        }
+
+        try {
+            //g1 = new Graph("casestudies/grafo_1.txt");
+            g4 = new Graph("casestudies/grafo_4.txt");
+            //g3 = new Graph("casestudies/grafo_3.txt");
+           // g4 = new Graph("casestudies/grafo_4.txt");
+            //g5 = new Graph("casestudies/grafo_5.txt");
+        } catch (InstantiationException exc) {
+            System.err.println("Falha na criacao do grafo do trabalho");
         }
 
 
@@ -404,11 +420,14 @@ class GraphTest {
     @Test
     @DisplayName("Árvore geradora mínima com Prim.")
     void MST() {
-       Object[] primtest = primvid.prim(1);
-       Object[] pdf2test = pdf2.prim(1);
+       Object g4w = g4.prim(1)[0];
+       //Object g2w = g2.prim(1)[0];
+       //Object g3w = g3.prim(1)[0];
       // Set<Map.Entry<Integer, Double>> adjlist = primvid.adjList.get(1).entrySet();
 
-        assertEquals(-6.9, pdf2test[1]);
+        assertEquals(0, g4w);
+        //assertEquals(0, g2w);
+        //assertEquals(0, g3w);
     }
 
 
