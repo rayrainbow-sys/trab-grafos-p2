@@ -685,7 +685,7 @@ public class Graph {
                     }
 
                     if (v.getKey() == goal) {
-                        LinkedList<Integer> path = new LinkedList<>();
+                        ArrayList<Integer> path = new ArrayList<>();
                         Integer dest = goal;
                         while (prev.get(dest) != null) {
                             path.add(dest);
@@ -715,6 +715,13 @@ public class Graph {
         return this.dijkstra(origin, -1);
     }
 
+    /**
+     * Implementa o algoritmo de Bellman-Ford para encontrar o menor (menos custoso)
+     * caminho do vértice origin a todos os outros do grafo. Esse algoritmo contempla
+     * grafos que possuem arestas negativas.
+     * @param origin
+     * @return
+     */
     public Object[] bellmanFord(int origin, int goal) throws Throwable {
         Double inf = Double.POSITIVE_INFINITY;
 
@@ -845,16 +852,8 @@ public class Graph {
         return results;
     }
 
-    public void shortestPath(int origin, int goal) {
-        ArrayList vertices = new ArrayList<>();
-
-        for (int i = 0; i <= this.getNNodes(); i++) {
-            vertices.add(i + 1);
-        }
-    }
-
     /**
-     * Imprime um relatório sobre o grafo num arquivo de texto.
+     * Imprime a MST de um grafo num arquivo de texto.
      * @param outfile Arquivo de saída, incluindo caminho absoluto ou a
      *                partir da raiz do diretório de trabalho. Será
      *                sobrescrito caso já exista.
@@ -874,6 +873,31 @@ public class Graph {
         }
 
         bw.close();
+    }
+
+    /**
+     * Função para relacionar Dijkstra aos demais pesquisadores
+     * (pelo nome) através de uma distância mínima e um caminho mínimo.
+     * @param v vértice associado ao pesquisador a ser relacionado.
+     * @param map Mapa que associa os vértices aos rerspectivos colaboradores
+     *            da rede.
+     * @return Um array de Strings cuja primeira entrada é a distância
+     * mínima entre Dijkstra e o pesquisador em questão. As demais entradas
+     * tem os nomes dos pesquisadores do caminho minimo.
+     */
+
+    public ArrayList<String> dijkstraColab(int v, HashMap map) {
+        ArrayList<Integer> result = (ArrayList<Integer>) ((this.dijkstra(v, 2722))[1]);
+
+        ArrayList<String> stringResult = new ArrayList<>();
+
+        stringResult.add((this.dijkstra(v, 2722))[0].toString());
+
+        for (Integer vertex :  result) {
+            stringResult.add((String) map.get(vertex));
+        }
+
+        return stringResult;
     }
 
 }
