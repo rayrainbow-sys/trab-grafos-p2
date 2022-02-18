@@ -2,6 +2,7 @@ package graphs;
 
 
 // Estruturas de dados etc.:
+import javax.lang.model.type.ArrayType;
 import java.sql.Array;
 import java.util.*;
 import java.lang.Math;
@@ -38,8 +39,6 @@ public class Graph {
      * Representação dos custos das adjacências do grafo.
      */
     private ArrayList<LinkedHashMap<Integer, Double>> adjList;
-
-    //private double inf = Double.POSITIVE_INFINITY;
 
     /**
      * Construtor da classe Graph.
@@ -638,53 +637,69 @@ public class Graph {
      * @return
      */
 
-    public Object[] dikjstra(int origin, int goal) {
+    public Object[] dijkstra(int origin, int goal) {
         Double inf = Double.POSITIVE_INFINITY;
 
         ArrayList<Double> dist = new ArrayList<>();
-        HashMap<Integer, Integer> prev = new HashMap<>();
+        ArrayList<Integer> prev = new ArrayList<>();
 
         //Instanciamos uma fila de prioridade que ordena os pesos dos vértices de forma
         //crescente
-        PriorityQueue<Double> PQ = new PriorityQueue<>();
+        PriorityQueue<Map.Entry<Integer, Double>> PQ = new PriorityQueue<>(Map.Entry.comparingByValue());
 
         for (int i = 0; i <= this.getNNodes(); i++) {
-            dist.add(inf);
+            dist.add(null);
+            prev.add(null);
         }
 
-        //Custo ou distância para sair da origem e chegar na própria origem
-        //é naturalmente zero.
+        //O peso da aresta que vai do vértice de origem até ele mesmo é, naturalmente,
+        //zero.
         dist.set(origin, 0.0);
 
+
         for (int i = 1; i <= this.getNNodes(); i++) {
-            PQ.add(dist.get(i));
+            if (i != origin) dist.set(i, inf);
+            PQ.add(new AbstractMap.SimpleEntry<Integer, Double>(i, dist.get(i)));
         }
 
         while (!PQ.isEmpty()) {
             //Primeiramente, instanciamos u que é a entrada com o vértice cuja aresta com o
             //vértice origem tem o menor peso, vide fila de prioridade.
-            Integer u = dist.indexOf(PQ.poll());
-
+            Map.Entry<Integer, Double> u = PQ.poll();
 
             //Para cada vértice v adjacente a u
-            for (Integer v : this.getNeighbors(u)) {
-                double alt = dist.get(u) + this.getWeight(u, v);
+            for (Map.Entry<Integer, Double> v : this.adjList.get(u.getKey()).entrySet()) {
+                double alt = dist.get(u.getKey()) + this.getWeight(u.getKey(), v.getKey());
 
-                if (PQ.contains(dist.get(v)) && alt < dist.get(v)) {
-                    PQ.remove(dist.get(v));
-                    dist.set(v, alt);
-                    prev.put(v, u);
-                    PQ.add(dist.get(v));
+                if (alt < dist.get(v.getKey())) {
+                    dist.set(v.getKey(), alt);
 
-                    if (v == goal) {
-                        Object[] results = {dist.get(goal), prev};
+                    prev.set(v.getKey(), u.getKey());
+
+                    //Mudamos na priority queue a entry que tem o vértice v para acomodar sua
+                    //nova distância associada
+                    for (Map.Entry<Integer, Double> entry : PQ) {
+                        if (entry.getKey() != null && entry.getKey().equals(v.getKey())) {
+                            entry.setValue(alt);
+                        }
+                    }
+
+                    if (v.getKey() == goal) {
+                        LinkedList<Integer> path = new LinkedList<>();
+                        Integer dest = goal;
+                        while (prev.get(dest) != null) {
+                            path.add(dest);
+                            dest = prev.get(dest);
+                        }
+                        path.add(origin);
+
+                        Object[] results = {dist.get(goal), path};
 
                         return results;
                     }
                 }
             }
         }
-
         Object[] results = {dist, prev};
 
         return results;
@@ -696,8 +711,8 @@ public class Graph {
      * @param origin
      * @return
      */
-    public Object[] dikjstra(int origin) {
-        return this.dikjstra(origin, -1);
+    public Object[] dijkstra(int origin) {
+        return this.dijkstra(origin, -1);
     }
 
     public Object[] bellmanFord(int origin, int goal) throws Throwable {
@@ -751,7 +766,7 @@ public class Graph {
                     }
 
                     if (v == goal) {
-                        Object[] results = {dist.get(goal), prev.get(goal)};
+                        Object[] results = {dist.get(goal), prev};
 
                         return results;
                     }
@@ -830,56 +845,32 @@ public class Graph {
         return results;
     }
 
+    public void shortestPath(int origin, int goal) {
+        ArrayList vertices = new ArrayList<>();
+
+        for (int i = 0; i <= this.getNNodes(); i++) {
+            vertices.add(i + 1);
+        }
+    }
+
     /**
      * Imprime um relatório sobre o grafo num arquivo de texto.
      * @param outfile Arquivo de saída, incluindo caminho absoluto ou a
      *                partir da raiz do diretório de trabalho. Será
      *                sobrescrito caso já exista.
      */
-    public void printReport (String outfile) throws IOException {
+    public void printMST (String outfile) throws IOException {
         BufferedWriter bw =
                 new BufferedWriter(new FileWriter(outfile, false));
         // cf. https://stackoverflow.com/a/52581499
         // Para criar o arquivo caso não exista, e sobrescrevê-lo caso exista
 
-        bw.write("Relatorio sobre o grafo " + this.getInputFile());
-        bw.write("\n(Representacao interna: ");
+        HashMap<Integer, Integer> mst = (HashMap) this.prim(1)[1];
 
-        //if (this.adjMatrix == null) {
-            bw.write("lista ");
-       /* } else {
-            bw.write("matriz ");
-        }*/
+        Set<Map.Entry<Integer, Integer>> nodes = mst.entrySet();
 
-        bw.write("de adjacências)");
-
-        bw.write("\n\nNumero de nos: " + this.getNNodes());
-        bw.write("\nNumero de arestas: " + this.getNEdges());
-
-        HashMap<String, Double> data = this.getDegreeOverview();
-
-        bw.write("\nGrau maximo: " + data.get("max"));
-        bw.write("\nGrau minimo: " + data.get("min"));
-        bw.write("\nGrau medio: " + data.get("mean"));
-        bw.write("\nMediana de grau: " + data.get("med"));
-
-        bw.write("\n\nComponentes conexas");
-
-        ArrayList<ArrayList<Integer>> components =
-                this.findConnectedComponents();
-
-        int qty = components.size();
-
-        bw.write("\nQuantidade: " + qty);
-        bw.write("\nFormato: [tamanho] nó1 nó2...");
-
-        for (ArrayList<Integer> component : components) {
-            int len = component.size();
-            bw.write("\n[" + len + "]");
-
-            for (Integer node : component) {
-                bw.write(" " + node);
-            }
+        for (Map.Entry<Integer, Integer> u : nodes) {
+            bw.write(u.getKey() + " " + u.getValue() + "\n");
         }
 
         bw.close();

@@ -387,17 +387,18 @@ class GraphTest {
     @Test
     @DisplayName("Caminho minimo e custo minimo de grafo sem pesos negativos com Dijkstra.")
     void shortestPositivePath() {
-        Object[] dfsTreeL4Dij = dfsTreeL4.dikjstra(2,8);
+        Double inf = Double.POSITIVE_INFINITY;
+        Object[] dfsTreeL4Dij = dfsTreeL4.dijkstra(5,1);
 
-        assertEquals(3.0, dfsTreeL4Dij[0]);
+        assertEquals(21.0, dfsTreeL4Dij[1]);
     }
 
     @Test
-    @DisplayName("Caminho minimo e custo minimo de grafo sem pesos negativos com Dijkstra.")
+    @DisplayName("Caminho minimo e custo minimo de grafo com pesos negativos com Bellman-Ford.")
     void shortestPath() throws Throwable {
-        Object[] pdf2BF = pdf2.bellmanFord(4, 8);
+        Object[] dfsTreeL4Dij = dfsTreeL4.bellmanFord(5, 8);
 
-        assertEquals(4.0, pdf2BF[0]);
+        assertEquals(4.0, dfsTreeL4Dij[1]);
     }
 
     @Test
@@ -407,7 +408,7 @@ class GraphTest {
        Object[] pdf2test = pdf2.prim(1);
       // Set<Map.Entry<Integer, Double>> adjlist = primvid.adjList.get(1).entrySet();
 
-        assertEquals(-6.9, pdf2test[0]);
+        assertEquals(-6.9, pdf2test[1]);
     }
 
 
