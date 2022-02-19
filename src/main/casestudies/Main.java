@@ -26,7 +26,7 @@ public class Main {
         Graph graph;
         BufferedWriter csvWriter;
 
-        /*try {
+        try {
             csvWriter =
                     new BufferedWriter(new FileWriter(outDir + "case_studies.csv",
                             false));
@@ -38,7 +38,7 @@ public class Main {
             // (neste caso não é problema, porque se houver a exceção a
             // execução é encerrada)
             System.exit(1);
-        }*/
+        }
 
         try {
             csvWriter =
@@ -54,13 +54,13 @@ public class Main {
             System.exit(1);
         }
 
-        /*String csvHeader = "grafo,avgRuntime,dist1_10,dist1_20,dist1_30,dist1_40,dist1_50," +
-                "CM1_10, CM1_20, CM1_30, CM1_40, CM1_50";*/
+        String csvHeader1 = "grafo,avgRuntime,dist1_10,dist1_20,dist1_30,dist1_40,dist1_50," +
+                "CM1_10, CM1_20, CM1_30, CM1_40, CM1_50";
 
-        String csvHeader = "Pesquisador,Distancia,CaminhoMinimo";
+        String csvHeader2 = "Pesquisador,Distancia,CaminhoMinimo";
 
         try {
-            csvWriter.write(csvHeader + "\n");
+            csvWriter.write(csvHeader1 + "\n");
         } catch (IOException exc) {
             System.err.println("Falha na escrita do arquivo csv das saidas " +
                     "das medicoes; abortando execucao");
@@ -128,7 +128,7 @@ public class Main {
         String Daniel = "Daniel R. Figueiredo," + dttDa.subList(0, 1) + "," + dttDa.subList(1, dttDa.size() - 1);
 
         try {
-            csvWriter.write(Turing + "\n");
+            csvWriter.write(csvHeader2 + "\n" + Turing + "\n");
             csvWriter.write(Kruskal + "\n");
             csvWriter.write(Kleinberg + "\n");
             csvWriter.write(Tardos + "\n");
@@ -141,7 +141,7 @@ public class Main {
         }
 
 
-        /*for (int i=1; i <= nCases; i ++) {
+        for (int i=1; i <= nCases; i ++) {
             String csvRow = i + ",";  // grafo
 
             if (i > 3) {
@@ -225,17 +225,17 @@ public class Main {
                 System.exit(1);
             }
 
-            /*if (i > 2) {
+            if (i > 2) {
                 try {
                     graph.printMST(outDir + "mst_" + i + ".txt");
                 } catch (IOException exc) {
                     System.err.println("Falha na escrita do arquivo txt das árvores");
                     System.exit(1);
                 }
-            }*/
+            }
 
 
-        //}
+        }
 
         try {
             csvWriter.close();

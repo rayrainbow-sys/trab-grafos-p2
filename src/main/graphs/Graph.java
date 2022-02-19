@@ -733,7 +733,7 @@ public class Graph {
             weight.add(null);
         }
 
-        //Instanciamos uma fila de prioridade que ordena os pesos dos vértices de forma
+        //Instanciamos uma fila que ordena os pesos dos vértices de forma
         //crescente
         Queue<Double> Q = new LinkedList<>();
 
