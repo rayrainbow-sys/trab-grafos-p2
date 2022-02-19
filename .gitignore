@@ -1,5 +1,6 @@
 out/
 casestudies/
 .idea/codeStyles/codeStyleConfig.xml
-src/test/reports
+src/test/input
 reports/
+src/test/reports
